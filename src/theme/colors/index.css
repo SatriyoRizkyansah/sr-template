@@ -1,0 +1,8 @@
+/* Color Theme System - Light and Dark Mode */
+@import "./light.css";
+@import "./dark.css";
+
+/* Theme transition support */
+* {
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
