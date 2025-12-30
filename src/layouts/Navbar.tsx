@@ -4,6 +4,7 @@ import { Search as SearchIcon, Logout, DarkMode as DarkModeIcon, LightMode as Li
 import { useNavigate } from "react-router-dom";
 import { useSidebar } from "./DashboardLayout";
 import { useTheme } from "../theme/useTheme";
+import CommandPalette from "../components/CommandPalette";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
@@ -15,6 +16,7 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const { isCollapsed, setIsCollapsed } = useSidebar();
   const { mode, toggleColorMode } = useTheme();
   const isMobile = useMediaQuery("(max-width:767px)");
@@ -84,36 +86,50 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Box
+            onClick={() => setCommandPaletteOpen(true)}
             sx={{
               display: { xs: "none", sm: "flex" },
               alignItems: "center",
               backgroundColor: "var(--muted)",
               borderRadius: "var(--radius)",
-              px: 3,
-              py: 1.5,
+              px: 2,
+              py: 0.75,
               mr: 2,
-              minWidth: 320,
+              minWidth: 280,
               border: "1px solid var(--border)",
               transition: "all var(--transition-fast)",
-              "&:focus-within": {
+              cursor: "pointer",
+              gap: 1,
+              "&:hover": {
                 borderColor: "var(--primary)",
-                backgroundColor: "var(--background)",
+                backgroundColor: "var(--accent)",
               },
             }}
           >
-            <SearchIcon fontSize="small" sx={{ color: "var(--muted-foreground)", mr: 2 }} />
+            <SearchIcon sx={{ color: "var(--muted-foreground)", fontSize: "18px" }} />
             <InputBase
-              placeholder="Search..."
+              placeholder="Search... (Cmd+K)"
               sx={{
                 flex: 1,
                 color: "var(--foreground)",
-                fontSize: "0.875rem",
+                fontSize: "0.85rem",
+                pointerEvents: "none",
                 "& input::placeholder": {
                   color: "var(--muted-foreground)",
                   opacity: 1,
                 },
               }}
+              readOnly
             />
+            <Typography
+              sx={{
+                fontSize: "0.7rem",
+                color: "var(--muted-foreground)",
+                fontWeight: 500,
+              }}
+            >
+              ⌘K
+            </Typography>
           </Box>
 
           <IconButton
@@ -212,6 +228,7 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
           </Menu>
         </Box>
       </Toolbar>
+      <CommandPalette isOpen={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
     </AppBar>
   );
 };
