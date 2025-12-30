@@ -93,7 +93,7 @@ const Sidebar: React.FC = () => {
     <Drawer
       variant="permanent"
       sx={{
-        width: drawerWidth,
+        width: 0,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: drawerWidth,
@@ -103,6 +103,8 @@ const Sidebar: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           position: "fixed",
+          left: 0,
+          top: 0,
           height: "100vh",
         },
       }}
