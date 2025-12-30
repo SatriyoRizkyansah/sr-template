@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
@@ -43,7 +43,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
     }
   };
 
-  const currentWidth = isCollapsed ? drawerWidthCollapsed : drawerWidth;
+  // Desktop: collapsed = 80px, Desktop: expanded = 250px
+  // Mobile: collapsed = 0px, Mobile: expanded = 250px
+  const isMobile = useMediaQuery("(max-width:767px)");
+  const sidebarWidth = isCollapsed ? drawerWidthCollapsed : drawerWidth;
+  const currentWidth = isMobile ? 0 : sidebarWidth;
 
   return (
     <SidebarContext.Provider value={{ isCollapsed, setIsCollapsed: updateCollapsed }}>
@@ -53,8 +57,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
           component="main"
           sx={{
             flexGrow: 1,
-            width: `calc(100% - ${currentWidth}px)`,
-            ml: `${currentWidth}px`,
+            width: isMobile ? "100%" : `calc(100% - ${currentWidth}px)`,
+            ml: isMobile ? 0 : `${currentWidth}px`,
             minHeight: "100vh",
             transition: "margin 0.3s ease, width 0.3s ease",
           }}

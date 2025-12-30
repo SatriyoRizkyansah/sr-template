@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, Avatar, Menu, MenuItem } from "@mui/material";
-import { Search as SearchIcon, Menu as MenuIcon, Logout, DarkMode as DarkModeIcon, LightMode as LightModeIcon } from "@mui/icons-material";
+import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, Avatar, Menu, MenuItem, useMediaQuery } from "@mui/material";
+import { Search as SearchIcon, Logout, DarkMode as DarkModeIcon, LightMode as LightModeIcon, ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { useSidebar } from "./DashboardLayout";
 import { useTheme } from "../theme/useTheme";
@@ -15,9 +15,11 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { isCollapsed } = useSidebar();
+  const { isCollapsed, setIsCollapsed } = useSidebar();
   const { mode, toggleColorMode } = useTheme();
-  const currentWidth = isCollapsed ? drawerWidthCollapsed : drawerWidth;
+  const isMobile = useMediaQuery("(max-width:767px)");
+  const sidebarWidth = isCollapsed ? drawerWidthCollapsed : drawerWidth;
+  const currentWidth = isMobile ? 0 : sidebarWidth;
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -37,8 +39,8 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
       position="fixed"
       elevation={0}
       sx={{
-        width: `calc(100% - ${currentWidth}px)`,
-        ml: `${currentWidth}px`,
+        width: isMobile ? "100%" : `calc(100% - ${currentWidth}px)`,
+        ml: isMobile ? 0 : `${currentWidth}px`,
         backgroundColor: "var(--background)",
         // borderBottom: "1px solid var(--border)",
         color: "var(--foreground)",
@@ -49,12 +51,23 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
       <Toolbar sx={{ justifyContent: "space-between", minHeight: "64px !important", px: 3, pl: isCollapsed ? { xs: 3, sm: 5 } : 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton
+            onClick={() => setIsCollapsed(!isCollapsed)}
             sx={{
               display: { xs: "flex", md: "none" },
               color: "var(--foreground)",
+              backgroundColor: "var(--muted)",
+              border: "1px solid var(--border)",
+              borderRadius: "var(--radius)",
+              width: 40,
+              height: 40,
+              transition: "all var(--transition-fast)",
+              "&:hover": {
+                backgroundColor: "var(--accent)",
+                borderColor: "var(--primary)",
+              },
             }}
           >
-            <MenuIcon />
+            {isCollapsed ? <ChevronRightIcon fontSize="small" /> : <ChevronLeftIcon fontSize="small" />}
           </IconButton>
           <Typography
             variant="h5"

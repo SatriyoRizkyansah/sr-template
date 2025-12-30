@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Typography, Avatar, IconButton } from "@mui/material";
+import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Typography, Avatar, IconButton, useMediaQuery } from "@mui/material";
 import {
   Dashboard as DashboardIcon,
   ShoppingCart as MarketplaceIcon,
@@ -48,6 +48,9 @@ const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isCollapsed, setIsCollapsed } = useSidebar();
+  const isMobile = useMediaQuery("(max-width:767px)");
+  const sidebarWidth = isCollapsed ? drawerWidthCollapsed : drawerWidth;
+  const drawerPaperWidth = isMobile ? drawerWidth : sidebarWidth;
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -56,14 +59,15 @@ const Sidebar: React.FC = () => {
       key={item.title}
       onClick={() => navigate(item.path)}
       sx={{
-        borderRadius: 2,
-        mb: 0.5,
-        py: 1.5,
-        px: isCollapsed ? 1.5 : 2,
-        transition: "all 0.2s ease",
+        borderRadius: 1.5,
+        mb: 0.25,
+        py: 1,
+        px: 1.75,
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
         backgroundColor: isActive(item.path) ? "var(--accent)" : "transparent",
         color: isActive(item.path) ? "var(--primary)" : "var(--foreground)",
-        justifyContent: isCollapsed ? "center" : "flex-start",
+        justifyContent: "flex-start",
+        overflow: "hidden",
         "&:hover": {
           backgroundColor: "var(--accent)",
           color: "var(--primary)",
@@ -75,33 +79,44 @@ const Sidebar: React.FC = () => {
           minWidth: 36,
           color: "inherit",
           opacity: isActive(item.path) ? 1 : 0.7,
-          justifyContent: "center",
+          justifyContent: "flex-start",
+          flex: "0 0 auto",
         }}
       >
         {item.icon}
       </ListItemIcon>
-      {!isCollapsed && (
-        <ListItemText
-          primary={item.title}
-          sx={{
-            "& .MuiListItemText-primary": {
-              fontSize: "0.875rem",
-              fontWeight: isActive(item.path) ? 600 : 500,
-            },
-          }}
-        />
-      )}
+      <ListItemText
+        primary={item.title}
+        sx={{
+          ml: isCollapsed ? 0 : 1,
+          flex: isCollapsed ? "0 0 auto" : "1 1 auto",
+          minWidth: 0,
+          maxWidth: isCollapsed ? 0 : 200,
+          opacity: isCollapsed ? 0 : 1,
+          overflow: "hidden",
+          transition: "max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.3s ease",
+          whiteSpace: "nowrap",
+          pointerEvents: isCollapsed ? "none" : "auto",
+          "& .MuiListItemText-primary": {
+            fontSize: "0.875rem",
+            fontWeight: isActive(item.path) ? 600 : 500,
+          },
+        }}
+      />
     </ListItemButton>
   );
 
   return (
     <Drawer
-      variant="permanent"
+      variant={isMobile ? "temporary" : "permanent"}
+      open={isMobile ? !isCollapsed : true}
+      onClose={() => setIsCollapsed(true)}
+      ModalProps={{ keepMounted: true }}
       sx={{
         width: 0,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: isCollapsed ? drawerWidthCollapsed : drawerWidth,
+          width: drawerPaperWidth,
           boxSizing: "border-box",
           backgroundColor: "var(--muted)",
           display: "flex",
@@ -112,14 +127,14 @@ const Sidebar: React.FC = () => {
           height: "100vh",
           boxShadow: "none",
           borderRight: "none",
-          transition: "width 0.3s ease",
+          transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           overflow: "visible",
         },
       }}
     >
       {/* Logo Section */}
-      <Box sx={{ p: 3, pb: 2, display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative" }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+      <Box sx={{ p: 2, pb: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative" }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
             sx={{
               width: 40,
@@ -159,7 +174,7 @@ const Sidebar: React.FC = () => {
           </IconButton>
         )}
 
-        {isCollapsed && (
+        {isCollapsed && !isMobile && (
           <IconButton
             onClick={() => setIsCollapsed(!isCollapsed)}
             sx={{
@@ -196,7 +211,7 @@ const Sidebar: React.FC = () => {
         sx={{
           flex: 1,
           overflow: "auto",
-          p: 2,
+          p: 1.5,
           // Custom scrollbar styling
           scrollbarWidth: "thin",
           scrollbarColor: "var(--border) transparent",
@@ -216,7 +231,13 @@ const Sidebar: React.FC = () => {
         }}
       >
         {/* Marketing Section */}
-        {!isCollapsed && (
+        <Box
+          sx={{
+            position: "relative",
+            height: "32px",
+            overflow: "hidden",
+          }}
+        >
           <Typography
             variant="overline"
             sx={{
@@ -227,15 +248,15 @@ const Sidebar: React.FC = () => {
               fontWeight: 600,
               fontSize: "0.75rem",
               letterSpacing: "0.1em",
+              position: "absolute",
+              left: 0,
+              opacity: isCollapsed ? 0 : 1,
+              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              pointerEvents: isCollapsed ? "none" : "auto",
             }}
           >
             Marketing
           </Typography>
-        )}
-        <List sx={{ p: 0, mb: 3 }}>{marketingItems.map(renderNavItem)}</List>
-
-        {/* Payments Section */}
-        {!isCollapsed && (
           <Typography
             variant="overline"
             sx={{
@@ -246,45 +267,135 @@ const Sidebar: React.FC = () => {
               fontWeight: 600,
               fontSize: "0.75rem",
               letterSpacing: "0.1em",
+              textAlign: "center",
+              position: "absolute",
+              left: 0,
+              right: 0,
+              opacity: isCollapsed ? 1 : 0,
+              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              pointerEvents: isCollapsed ? "auto" : "none",
+            }}
+          >
+            M
+          </Typography>
+        </Box>
+        <List sx={{ p: 0, mb: 2 }}>{marketingItems.map(renderNavItem)}</List>
+
+        {/* Payments Section */}
+        <Box
+          sx={{
+            position: "relative",
+            height: "30px",
+            overflow: "hidden",
+          }}
+        >
+          <Typography
+            variant="overline"
+            sx={{
+              px: 2,
+              py: 0.75,
+              display: "block",
+              color: "var(--muted-foreground)",
+              fontWeight: 600,
+              fontSize: "0.7rem",
+              letterSpacing: "0.1em",
+              position: "absolute",
+              left: 0,
+              opacity: isCollapsed ? 0 : 1,
+              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              pointerEvents: isCollapsed ? "none" : "auto",
             }}
           >
             Payments
           </Typography>
-        )}
-        <List sx={{ p: 0, mb: 3 }}>{paymentsItems.map(renderNavItem)}</List>
-
-        {/* System Section */}
-        {!isCollapsed && (
           <Typography
             variant="overline"
             sx={{
               px: 2,
-              py: 1,
+              py: 0.75,
               display: "block",
               color: "var(--muted-foreground)",
               fontWeight: 600,
-              fontSize: "0.75rem",
+              fontSize: "0.7rem",
               letterSpacing: "0.1em",
+              textAlign: "center",
+              position: "absolute",
+              left: 0,
+              right: 0,
+              opacity: isCollapsed ? 1 : 0,
+              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              pointerEvents: isCollapsed ? "auto" : "none",
+            }}
+          >
+            P
+          </Typography>
+        </Box>
+        <List sx={{ p: 0, mb: 2 }}>{paymentsItems.map(renderNavItem)}</List>
+
+        {/* System Section */}
+        <Box
+          sx={{
+            position: "relative",
+            height: "30px",
+            overflow: "hidden",
+          }}
+        >
+          <Typography
+            variant="overline"
+            sx={{
+              px: 2,
+              py: 0.75,
+              display: "block",
+              color: "var(--muted-foreground)",
+              fontWeight: 600,
+              fontSize: "0.7rem",
+              letterSpacing: "0.1em",
+              position: "absolute",
+              left: 0,
+              opacity: isCollapsed ? 0 : 1,
+              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              pointerEvents: isCollapsed ? "none" : "auto",
             }}
           >
             System
           </Typography>
-        )}
+          <Typography
+            variant="overline"
+            sx={{
+              px: 2,
+              py: 0.75,
+              display: "block",
+              color: "var(--muted-foreground)",
+              fontWeight: 600,
+              fontSize: "0.7rem",
+              letterSpacing: "0.1em",
+              textAlign: "center",
+              position: "absolute",
+              left: 0,
+              right: 0,
+              opacity: isCollapsed ? 1 : 0,
+              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+              pointerEvents: isCollapsed ? "auto" : "none",
+            }}
+          >
+            S
+          </Typography>
+        </Box>
         <List sx={{ p: 0 }}>{systemItems.map(renderNavItem)}</List>
       </Box>
       {/* User Profile Section */}
       <Box
         sx={{
-          p: 2,
+          p: 1.5,
         }}
       >
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 2,
-            p: 2,
-            borderRadius: 2,
+            gap: 1.5,
+            p: 1.5,
+            borderRadius: 1.5,
             cursor: "pointer",
             transition: "all 0.2s ease",
             justifyContent: isCollapsed ? "center" : "flex-start",
