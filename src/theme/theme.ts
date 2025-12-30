@@ -3,9 +3,7 @@ import { createTheme, type Theme } from "@mui/material/styles";
 // Helper function to get CSS variable value
 const getCSSVariable = (varName: string): string => {
   if (typeof window !== "undefined") {
-    return getComputedStyle(document.documentElement)
-      .getPropertyValue(varName)
-      .trim();
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
   }
   return "";
 };
@@ -14,117 +12,49 @@ export const createCustomTheme = (mode: "light" | "dark"): Theme => {
   return createTheme({
     palette: {
       mode,
+      // Primary color - ganti di CSS variables
       primary: {
         main: getCSSVariable("--primary") || "#0ea5e9",
         contrastText: getCSSVariable("--primary-foreground") || "#ffffff",
       },
+      // Secondary color - ganti di CSS variables
       secondary: {
         main: getCSSVariable("--secondary") || "#f1f5f9",
         contrastText: getCSSVariable("--secondary-foreground") || "#1e293b",
       },
+      // Error/Destructive color - ganti di CSS variables
       error: {
         main: getCSSVariable("--destructive") || "#dc2626",
         contrastText: "#ffffff",
       },
-      warning: {
-        main: getCSSVariable("--chart-4") || "#eab308",
-        contrastText: "#ffffff",
-      },
-      info: {
-        main: getCSSVariable("--chart-2") || "#8b5cf6",
-        contrastText: "#ffffff",
-      },
-      success: {
-        main: getCSSVariable("--chart-1") || "#0ea5e9",
-        contrastText: "#ffffff",
-      },
+      // Background colors - ganti di CSS variables
       background: {
         default: getCSSVariable("--background") || (mode === "dark" ? "#09090b" : "#fafafa"),
         paper: getCSSVariable("--card") || (mode === "dark" ? "#1a1a1e" : "#ffffff"),
       },
+      // Text colors - ganti di CSS variables
       text: {
         primary: getCSSVariable("--foreground") || (mode === "dark" ? "#fafafa" : "#0f172a"),
         secondary: getCSSVariable("--muted-foreground") || (mode === "dark" ? "#a1a1aa" : "#64748b"),
       },
+      // Border color - ganti di CSS variables
       divider: getCSSVariable("--border") || (mode === "dark" ? "#27272a" : "#e2e8f0"),
-      action: {
-        hover: getCSSVariable("--accent") || (mode === "dark" ? "#27272a" : "#f1f5f9"),
-        selected: getCSSVariable("--accent") || (mode === "dark" ? "#27272a" : "#f1f5f9"),
-      },
     },
+    // Typography menggunakan CSS variable untuk font family
     typography: {
       fontFamily: "var(--font-sans)",
-      h1: {
-        fontFamily: "var(--font-sans)",
-        fontWeight: 700,
-      },
-      h2: {
-        fontFamily: "var(--font-sans)",
-        fontWeight: 600,
-      },
-      h3: {
-        fontFamily: "var(--font-sans)",
-        fontWeight: 600,
-      },
-      h4: {
-        fontFamily: "var(--font-sans)",
-        fontWeight: 600,
-      },
-      h5: {
-        fontFamily: "var(--font-sans)",
-        fontWeight: 600,
-      },
-      h6: {
-        fontFamily: "var(--font-sans)",
-        fontWeight: 600,
-      },
-      body1: {
-        fontFamily: "var(--font-sans)",
-      },
-      body2: {
-        fontFamily: "var(--font-sans)",
-      },
     },
+    // Border radius default - bisa override di component level
     shape: {
-      borderRadius: 4,
+      borderRadius: 8,
     },
-    shadows: [
-      "none",
-      "var(--shadow-xs)",
-      "var(--shadow-sm)",
-      "var(--shadow)",
-      "var(--shadow-md)",
-      "var(--shadow-lg)",
-      "var(--shadow-xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-      "var(--shadow-2xl)",
-    ],
+    // Component overrides - minimal, hanya yang penting
     components: {
       MuiCssBaseline: {
         styleOverrides: {
           body: {
             backgroundColor: "var(--background)",
             color: "var(--foreground)",
-            transition: "background-color 0.2s ease, color 0.2s ease",
-          },
-          "*": {
-            transition: "background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease",
           },
         },
       },
@@ -132,14 +62,7 @@ export const createCustomTheme = (mode: "light" | "dark"): Theme => {
         styleOverrides: {
           root: {
             textTransform: "none",
-            borderRadius: "var(--radius)",
             fontWeight: 500,
-          },
-          contained: {
-            boxShadow: "var(--shadow-sm)",
-            "&:hover": {
-              boxShadow: "var(--shadow-md)",
-            },
           },
         },
       },
@@ -148,7 +71,6 @@ export const createCustomTheme = (mode: "light" | "dark"): Theme => {
           root: {
             backgroundColor: "var(--card)",
             color: "var(--card-foreground)",
-            borderColor: "var(--border)",
           },
         },
       },
@@ -157,26 +79,23 @@ export const createCustomTheme = (mode: "light" | "dark"): Theme => {
           root: {
             backgroundColor: "var(--card)",
             color: "var(--card-foreground)",
-            borderColor: "var(--border)",
-            boxShadow: "var(--shadow-sm)",
+            border: "1px solid var(--border)",
           },
         },
       },
-      MuiTextField: {
+      MuiDrawer: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: "var(--card)",
+            borderColor: "var(--border)",
+          },
+        },
+      },
+      MuiAppBar: {
         styleOverrides: {
           root: {
-            "& .MuiOutlinedInput-root": {
-              backgroundColor: "var(--background)",
-              "& fieldset": {
-                borderColor: "var(--border)",
-              },
-              "&:hover fieldset": {
-                borderColor: "var(--border)",
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "var(--ring)",
-              },
-            },
+            backgroundColor: "var(--background)",
+            color: "var(--foreground)",
           },
         },
       },

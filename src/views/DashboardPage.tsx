@@ -1,52 +1,46 @@
 import React from "react";
-import { Container, Typography, Card, CardContent, Box, Button, AppBar, Toolbar, Stack, Paper } from "@mui/material";
-import { Dashboard as DashboardIcon, Assessment, People, Settings, TrendingUp, AttachMoney, ShoppingCart, Notifications } from "@mui/icons-material";
-import { ThemeToggle } from "../components/ThemeToggle";
-import { useNavigate } from "react-router-dom";
+import { Typography, Card, CardContent, Box, Stack } from "@mui/material";
+import { TrendingUp, AttachMoney, ShoppingCart, People } from "@mui/icons-material";
+import DashboardLayout from "../layouts/DashboardLayout";
 
 const DashboardPage: React.FC = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    navigate("/login");
-  };
-
   const stats = [
-    { title: "Total Revenue", value: "$45,231", change: "+20.1%", icon: AttachMoney, color: "success.main" },
-    { title: "Total Orders", value: "1,234", change: "+12.5%", icon: ShoppingCart, color: "primary.main" },
-    { title: "Total Users", value: "8,462", change: "+5.2%", icon: People, color: "info.main" },
-    { title: "Growth", value: "32.4%", change: "+8.1%", icon: TrendingUp, color: "warning.main" },
+    { title: "Total Revenue", value: "$45,231", change: "+20.1%", icon: AttachMoney },
+    { title: "Total Orders", value: "1,234", change: "+12.5%", icon: ShoppingCart },
+    { title: "Total Users", value: "8,462", change: "+5.2%", icon: People },
+    { title: "Growth Rate", value: "32.4%", change: "+8.1%", icon: TrendingUp },
   ];
 
   return (
-    <Box sx={{ minHeight: "100vh", backgroundColor: "var(--background)" }}>
-      {/* Header */}
-      <AppBar position="static" sx={{ mb: 4 }}>
-        <Toolbar>
-          <DashboardIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Dashboard
+    <DashboardLayout title="Dashboard">
+      <Box sx={{ py: 2, px: 3 }}>
+        {/* Welcome Section */}
+        <Box sx={{ mb: 4 }}>
+          <Typography
+            variant="h3"
+            sx={{
+              fontWeight: 700,
+              color: "var(--foreground)",
+              mb: 1,
+              fontSize: { xs: "1.875rem", md: "2.25rem" },
+              letterSpacing: "-0.025em",
+            }}
+          >
+            Good morning, Harper 👋
           </Typography>
-          <ThemeToggle />
-          <Button color="inherit" onClick={handleLogout} sx={{ ml: 2 }}>
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
+          <Typography
+            variant="h6"
+            sx={{
+              color: "var(--muted-foreground)",
+              fontWeight: 400,
+              fontSize: "1.125rem",
+            }}
+          >
+            Here's what's happening with your store today.
+          </Typography>
+        </Box>
 
-      {/* Main Content */}
-      <Container maxWidth="xl">
         <Stack spacing={4}>
-          {/* Welcome Section */}
-          <Box>
-            <Typography variant="h4" gutterBottom sx={{ fontWeight: 600 }}>
-              Welcome Back! 👋
-            </Typography>
-            <Typography variant="body1" color="text.secondary">
-              Here's what's happening with your business today.
-            </Typography>
-          </Box>
-
           {/* Stats Grid */}
           <Box
             sx={{
@@ -54,7 +48,7 @@ const DashboardPage: React.FC = () => {
               gridTemplateColumns: {
                 xs: "1fr",
                 sm: "repeat(2, 1fr)",
-                md: "repeat(4, 1fr)",
+                lg: "repeat(4, 1fr)",
               },
               gap: 3,
             }}
@@ -65,145 +59,261 @@ const DashboardPage: React.FC = () => {
                 <Card
                   key={index}
                   sx={{
-                    height: "100%",
-                    boxShadow: "var(--shadow-md)",
-                    transition: "transform 0.2s, box-shadow 0.2s",
+                    backgroundColor: "var(--card)",
+                    border: "1px solid var(--border)",
+                    borderRadius: "12px",
+                    p: 3,
+                    transition: "all var(--transition-fast)",
                     "&:hover": {
                       transform: "translateY(-4px)",
-                      boxShadow: "var(--shadow-lg)",
+                      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+                      borderColor: "var(--primary)",
                     },
                   }}
                 >
-                  <CardContent>
-                    <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                      <Box
-                        sx={{
-                          p: 1,
-                          borderRadius: "var(--radius-md)",
-                          backgroundColor: stat.color,
-                          color: "white",
-                          display: "flex",
-                          mr: 2,
-                        }}
-                      >
-                        <Icon />
-                      </Box>
-                      <Typography variant="body2" color="success.main" sx={{ fontWeight: 600 }}>
-                        {stat.change}
-                      </Typography>
-                    </Box>
-                    <Typography variant="h4" sx={{ fontWeight: 700, mb: 0.5 }}>
-                      {stat.value}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                  <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 3 }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        color: "var(--muted-foreground)",
+                        fontSize: "0.875rem",
+                        fontWeight: 500,
+                      }}
+                    >
                       {stat.title}
                     </Typography>
-                  </CardContent>
+                    <Box
+                      sx={{
+                        width: 44,
+                        height: 44,
+                        borderRadius: "10px",
+                        background: "linear-gradient(135deg, var(--primary) 0%, #0284c7 100%)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "white",
+                      }}
+                    >
+                      <Icon fontSize="medium" />
+                    </Box>
+                  </Box>
+
+                  <Typography
+                    variant="h4"
+                    sx={{
+                      fontWeight: 700,
+                      mb: 1,
+                      color: "var(--foreground)",
+                      fontSize: "1.875rem",
+                      letterSpacing: "-0.025em",
+                    }}
+                  >
+                    {stat.value}
+                  </Typography>
+
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: stat.change.startsWith("+") ? "#059669" : "#dc2626",
+                      fontWeight: 600,
+                      fontSize: "0.875rem",
+                    }}
+                  >
+                    {stat.change} from last month
+                  </Typography>
                 </Card>
               );
             })}
           </Box>
 
-          {/* Quick Actions */}
+          {/* Chart Section */}
           <Box
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "1fr", md: "2fr 1fr" },
+              gridTemplateColumns: { xs: "1fr", lg: "2fr 1fr" },
               gap: 3,
             }}
           >
-            <Paper sx={{ p: 3, boxShadow: "var(--shadow-md)" }}>
-              <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                Recent Activity
-              </Typography>
-              <Box sx={{ mt: 3 }}>
-                {[1, 2, 3, 4].map((item) => (
-                  <Box
-                    key={item}
-                    sx={{
-                      py: 2,
-                      borderBottom: item !== 4 ? "1px solid var(--border)" : "none",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Box sx={{ display: "flex", alignItems: "center" }}>
-                      <Box
+            <Card
+              sx={{
+                backgroundColor: "var(--card)",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                p: 4,
+              }}
+            >
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    color: "var(--foreground)",
+                    fontSize: "1.125rem",
+                    mb: 1,
+                  }}
+                >
+                  Revenue Overview
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "var(--muted-foreground)",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  Monthly revenue for the last 6 months
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  height: 280,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "var(--muted)",
+                  borderRadius: "8px",
+                  border: "2px dashed var(--border)",
+                }}
+              >
+                <Typography variant="body1" sx={{ color: "var(--muted-foreground)" }}>
+                  Chart placeholder - Add your favorite chart library
+                </Typography>
+              </Box>
+            </Card>
+
+            <Card
+              sx={{
+                backgroundColor: "var(--card)",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                p: 4,
+              }}
+            >
+              <Box sx={{ mb: 3 }}>
+                <Typography
+                  variant="h6"
+                  sx={{
+                    fontWeight: 700,
+                    color: "var(--foreground)",
+                    fontSize: "1.125rem",
+                    mb: 1,
+                  }}
+                >
+                  Top Products
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: "var(--muted-foreground)",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  Best selling products this week
+                </Typography>
+              </Box>
+
+              <Stack spacing={3}>
+                {[
+                  { name: "Product A", sales: "$1,234", percentage: 45 },
+                  { name: "Product B", sales: "$892", percentage: 30 },
+                  { name: "Product C", sales: "$654", percentage: 25 },
+                ].map((product, index) => (
+                  <Box key={index}>
+                    <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+                      <Typography
+                        variant="body2"
                         sx={{
-                          width: 40,
-                          height: 40,
-                          borderRadius: "50%",
-                          backgroundColor: "var(--muted)",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          mr: 2,
+                          fontWeight: 600,
+                          color: "var(--foreground)",
+                          fontSize: "0.875rem",
                         }}
                       >
-                        <Assessment fontSize="small" />
-                      </Box>
-                      <Box>
-                        <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                          Activity Item {item}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          {item} hours ago
-                        </Typography>
-                      </Box>
+                        {product.name}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          color: "var(--muted-foreground)",
+                          fontSize: "0.875rem",
+                        }}
+                      >
+                        {product.sales}
+                      </Typography>
                     </Box>
-                    <Button size="small" variant="outlined">
-                      View
-                    </Button>
-                  </Box>
-                ))}
-              </Box>
-            </Paper>
-
-            <Stack spacing={3}>
-              <Paper sx={{ p: 3, boxShadow: "var(--shadow-md)" }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                  Quick Actions
-                </Typography>
-                <Stack spacing={2} sx={{ mt: 3 }}>
-                  <Button variant="contained" fullWidth startIcon={<People />} sx={{ justifyContent: "flex-start" }}>
-                    Manage Users
-                  </Button>
-                  <Button variant="outlined" fullWidth startIcon={<Assessment />} sx={{ justifyContent: "flex-start" }}>
-                    View Reports
-                  </Button>
-                  <Button variant="outlined" fullWidth startIcon={<Settings />} sx={{ justifyContent: "flex-start" }}>
-                    Settings
-                  </Button>
-                </Stack>
-              </Paper>
-
-              <Paper sx={{ p: 3, boxShadow: "var(--shadow-md)" }}>
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-                  Notifications
-                </Typography>
-                <Box sx={{ mt: 2 }}>
-                  {[1, 2, 3].map((item) => (
                     <Box
-                      key={item}
                       sx={{
-                        py: 1.5,
-                        borderBottom: item !== 3 ? "1px solid var(--border)" : "none",
-                        display: "flex",
-                        alignItems: "center",
+                        width: "100%",
+                        height: 6,
+                        backgroundColor: "var(--muted)",
+                        borderRadius: "3px",
+                        overflow: "hidden",
                       }}
                     >
-                      <Notifications fontSize="small" sx={{ mr: 1.5, color: "primary.main" }} />
-                      <Typography variant="body2">Notification {item}</Typography>
+                      <Box
+                        sx={{
+                          width: `${product.percentage}%`,
+                          height: "100%",
+                          background: "linear-gradient(90deg, var(--primary) 0%, #0284c7 100%)",
+                          borderRadius: "3px",
+                        }}
+                      />
                     </Box>
-                  ))}
-                </Box>
-              </Paper>
-            </Stack>
+                  </Box>
+                ))}
+              </Stack>
+            </Card>
           </Box>
+
+          {/* Recent Activity Table */}
+          <Card
+            sx={{
+              backgroundColor: "var(--card)",
+              border: "1px solid var(--border)",
+              borderRadius: "12px",
+              p: 4,
+            }}
+          >
+            <Box sx={{ mb: 3 }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 700,
+                  color: "var(--foreground)",
+                  fontSize: "1.125rem",
+                  mb: 1,
+                }}
+              >
+                Recent Orders
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "var(--muted-foreground)",
+                  fontSize: "0.875rem",
+                }}
+              >
+                Latest orders from your customers
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                p: 6,
+                backgroundColor: "var(--muted)",
+                borderRadius: "8px",
+                textAlign: "center",
+                border: "2px dashed var(--border)",
+              }}
+            >
+              <Typography variant="body1" sx={{ color: "var(--muted-foreground)" }}>
+                Data table placeholder - Add your preferred table component
+              </Typography>
+            </Box>
+          </Card>
         </Stack>
-      </Container>
-    </Box>
+      </Box>
+    </DashboardLayout>
   );
 };
 
