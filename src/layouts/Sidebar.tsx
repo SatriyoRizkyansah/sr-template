@@ -14,7 +14,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const drawerWidth = 280;
+const drawerWidth = 250;
 
 interface NavItem {
   title: string;
@@ -98,19 +98,21 @@ const Sidebar: React.FC = () => {
         "& .MuiDrawer-paper": {
           width: drawerWidth,
           boxSizing: "border-box",
-          backgroundColor: "var(--card)",
-          borderRight: "1px solid var(--border)",
+          backgroundColor: "var(--muted)",
+          // backgroundColor: "var(--card)",
           display: "flex",
           flexDirection: "column",
           position: "fixed",
           left: 0,
           top: 0,
           height: "100vh",
+          boxShadow: "none",
+          borderRight: "none",
         },
       }}
     >
       {/* Logo Section */}
-      <Box sx={{ p: 3, pb: 2, borderBottom: "1px solid var(--border)" }}>
+      <Box sx={{ p: 3, pb: 2 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Box
             sx={{
@@ -135,7 +137,29 @@ const Sidebar: React.FC = () => {
       </Box>
 
       {/* Navigation Content */}
-      <Box sx={{ flex: 1, overflow: "auto", p: 2 }}>
+      <Box
+        sx={{
+          flex: 1,
+          overflow: "auto",
+          p: 2,
+          // Custom scrollbar styling
+          scrollbarWidth: "thin",
+          scrollbarColor: "var(--border) transparent",
+          "&::-webkit-scrollbar": {
+            width: "6px",
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "transparent",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "var(--border)",
+            borderRadius: "3px",
+            "&:hover": {
+              backgroundColor: "var(--muted-foreground)",
+            },
+          },
+        }}
+      >
         {/* Marketing Section */}
         <Typography
           variant="overline"
@@ -191,7 +215,7 @@ const Sidebar: React.FC = () => {
       {/* User Profile Section */}
       <Box
         sx={{
-          borderTop: "1px solid var(--border)",
+          // borderTop: "1px solid var(--border)",
           p: 2,
         }}
       >

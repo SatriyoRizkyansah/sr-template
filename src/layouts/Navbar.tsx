@@ -34,7 +34,7 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
         width: `calc(100% - ${drawerWidth}px)`,
         ml: `${drawerWidth}px`,
         backgroundColor: "var(--background)",
-        borderBottom: "1px solid var(--border)",
+        // borderBottom: "1px solid var(--border)",
         color: "var(--foreground)",
         top: 0,
       }}
