@@ -1,48 +1,13 @@
 import React from "react";
-import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Typography, Avatar, IconButton, useMediaQuery } from "@mui/material";
-import {
-  Dashboard as DashboardIcon,
-  ShoppingCart as MarketplaceIcon,
-  Assignment as OrdersIcon,
-  TrendingUp as TrackingIcon,
-  People as CustomersIcon,
-  LocalOffer as DiscountsIcon,
-  Receipt as LedgerIcon,
-  AccountBalance as TaxesIcon,
-  Settings as SettingsIcon,
-  ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon,
-} from "@mui/icons-material";
+import { Box, Drawer, List, Typography, Avatar, IconButton, useMediaQuery } from "@mui/material";
+import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSidebar } from "./DashboardLayout";
+import SidebarNavItem from "./components/SidebarNavItem";
+import { marketingItems, paymentsItems, systemItems } from "./components/sidebarItems";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
-
-interface NavItem {
-  title: string;
-  icon: React.ReactNode;
-  path: string;
-}
-
-// Main marketing items
-const marketingItems: NavItem[] = [
-  { title: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-  { title: "Marketplace", icon: <MarketplaceIcon />, path: "/marketplace" },
-  { title: "Orders", icon: <OrdersIcon />, path: "/orders" },
-  { title: "Tracking", icon: <TrackingIcon />, path: "/tracking" },
-  { title: "Customers", icon: <CustomersIcon />, path: "/customers" },
-  { title: "Discounts", icon: <DiscountsIcon />, path: "/discounts" },
-];
-
-// Payments section
-const paymentsItems: NavItem[] = [
-  { title: "Ledger", icon: <LedgerIcon />, path: "/ledger" },
-  { title: "Taxes", icon: <TaxesIcon />, path: "/taxes" },
-];
-
-// System section
-const systemItems: NavItem[] = [{ title: "Settings", icon: <SettingsIcon />, path: "/settings" }];
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
@@ -54,57 +19,7 @@ const Sidebar: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const renderNavItem = (item: NavItem) => (
-    <ListItemButton
-      key={item.title}
-      onClick={() => navigate(item.path)}
-      sx={{
-        borderRadius: 1.5,
-        mb: 0.25,
-        py: 1,
-        px: 1.75,
-        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        backgroundColor: isActive(item.path) ? "var(--accent)" : "transparent",
-        color: isActive(item.path) ? "var(--primary)" : "var(--foreground)",
-        justifyContent: "flex-start",
-        overflow: "hidden",
-        "&:hover": {
-          backgroundColor: "var(--accent)",
-          color: "var(--primary)",
-        },
-      }}
-    >
-      <ListItemIcon
-        sx={{
-          minWidth: 36,
-          color: "inherit",
-          opacity: isActive(item.path) ? 1 : 0.7,
-          justifyContent: "flex-start",
-          flex: "0 0 auto",
-        }}
-      >
-        {item.icon}
-      </ListItemIcon>
-      <ListItemText
-        primary={item.title}
-        sx={{
-          ml: isCollapsed ? 0 : 1,
-          flex: isCollapsed ? "0 0 auto" : "1 1 auto",
-          minWidth: 0,
-          maxWidth: isCollapsed ? 0 : 200,
-          opacity: isCollapsed ? 0 : 1,
-          overflow: "hidden",
-          transition: "max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.3s ease",
-          whiteSpace: "nowrap",
-          pointerEvents: isCollapsed ? "none" : "auto",
-          "& .MuiListItemText-primary": {
-            fontSize: "0.875rem",
-            fontWeight: isActive(item.path) ? 600 : 500,
-          },
-        }}
-      />
-    </ListItemButton>
-  );
+  const renderNavItem = (item: (typeof marketingItems)[number]) => <SidebarNavItem key={item.title} item={item} active={isActive(item.path)} collapsed={isCollapsed} onNavigate={navigate} />;
 
   return (
     <Drawer
