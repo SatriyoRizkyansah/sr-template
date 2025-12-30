@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Typography, Avatar } from "@mui/material";
+import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Typography, Avatar, IconButton } from "@mui/material";
 import {
   Dashboard as DashboardIcon,
   ShoppingCart as MarketplaceIcon,
@@ -10,11 +10,14 @@ import {
   Receipt as LedgerIcon,
   AccountBalance as TaxesIcon,
   Settings as SettingsIcon,
-  DarkMode as DarkModeIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSidebar } from "./DashboardLayout";
 
 const drawerWidth = 250;
+const drawerWidthCollapsed = 80;
 
 interface NavItem {
   title: string;
@@ -39,14 +42,12 @@ const paymentsItems: NavItem[] = [
 ];
 
 // System section
-const systemItems: NavItem[] = [
-  { title: "Settings", icon: <SettingsIcon />, path: "/settings" },
-  { title: "Dark mode", icon: <DarkModeIcon />, path: "/dark-mode" },
-];
+const systemItems: NavItem[] = [{ title: "Settings", icon: <SettingsIcon />, path: "/settings" }];
 
 const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { isCollapsed, setIsCollapsed } = useSidebar();
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -58,10 +59,11 @@ const Sidebar: React.FC = () => {
         borderRadius: 2,
         mb: 0.5,
         py: 1.5,
-        px: 2,
+        px: isCollapsed ? 1.5 : 2,
         transition: "all 0.2s ease",
         backgroundColor: isActive(item.path) ? "var(--accent)" : "transparent",
         color: isActive(item.path) ? "var(--primary)" : "var(--foreground)",
+        justifyContent: isCollapsed ? "center" : "flex-start",
         "&:hover": {
           backgroundColor: "var(--accent)",
           color: "var(--primary)",
@@ -73,19 +75,22 @@ const Sidebar: React.FC = () => {
           minWidth: 36,
           color: "inherit",
           opacity: isActive(item.path) ? 1 : 0.7,
+          justifyContent: "center",
         }}
       >
         {item.icon}
       </ListItemIcon>
-      <ListItemText
-        primary={item.title}
-        sx={{
-          "& .MuiListItemText-primary": {
-            fontSize: "0.875rem",
-            fontWeight: isActive(item.path) ? 600 : 500,
-          },
-        }}
-      />
+      {!isCollapsed && (
+        <ListItemText
+          primary={item.title}
+          sx={{
+            "& .MuiListItemText-primary": {
+              fontSize: "0.875rem",
+              fontWeight: isActive(item.path) ? 600 : 500,
+            },
+          }}
+        />
+      )}
     </ListItemButton>
   );
 
@@ -96,10 +101,9 @@ const Sidebar: React.FC = () => {
         width: 0,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
-          width: drawerWidth,
+          width: isCollapsed ? drawerWidthCollapsed : drawerWidth,
           boxSizing: "border-box",
           backgroundColor: "var(--muted)",
-          // backgroundColor: "var(--card)",
           display: "flex",
           flexDirection: "column",
           position: "fixed",
@@ -108,11 +112,13 @@ const Sidebar: React.FC = () => {
           height: "100vh",
           boxShadow: "none",
           borderRight: "none",
+          transition: "width 0.3s ease",
+          overflow: "visible",
         },
       }}
     >
       {/* Logo Section */}
-      <Box sx={{ p: 3, pb: 2 }}>
+      <Box sx={{ p: 3, pb: 2, display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <Box
             sx={{
@@ -130,12 +136,61 @@ const Sidebar: React.FC = () => {
           >
             F
           </Box>
-          <Typography variant="h6" fontWeight={600} sx={{ color: "var(--foreground)" }}>
-            Flup
-          </Typography>
+          {!isCollapsed && (
+            <Typography variant="h6" fontWeight={600} sx={{ color: "var(--foreground)" }}>
+              Flup
+            </Typography>
+          )}
         </Box>
-      </Box>
 
+        {!isCollapsed && (
+          <IconButton
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            sx={{
+              color: "var(--foreground)",
+              padding: 1,
+              borderRadius: "6px",
+              "&:hover": {
+                backgroundColor: "var(--accent)",
+              },
+            }}
+          >
+            <ChevronLeftIcon />
+          </IconButton>
+        )}
+
+        {isCollapsed && (
+          <IconButton
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            sx={{
+              position: "absolute",
+              right: "-22px",
+              top: "50%",
+              transform: "translateY(-50%)",
+              color: "white",
+              backgroundColor: "rgba(14, 165, 233, 0.85)",
+              width: 28,
+              height: 28,
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+              transition: "all 0.3s ease",
+              zIndex: 1300,
+              borderRadius: "4px",
+              fontSize: "0.875rem",
+              "&:hover": {
+                backgroundColor: "rgba(14, 165, 233, 1)",
+                transform: "translateY(-50%) scale(1.1)",
+                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+              },
+            }}
+          >
+            <ChevronRightIcon sx={{ fontSize: "18px" }} />
+          </IconButton>
+        )}
+      </Box>
       {/* Navigation Content */}
       <Box
         sx={{
@@ -161,61 +216,65 @@ const Sidebar: React.FC = () => {
         }}
       >
         {/* Marketing Section */}
-        <Typography
-          variant="overline"
-          sx={{
-            px: 2,
-            py: 1,
-            display: "block",
-            color: "var(--muted-foreground)",
-            fontWeight: 600,
-            fontSize: "0.75rem",
-            letterSpacing: "0.1em",
-          }}
-        >
-          Marketing
-        </Typography>
+        {!isCollapsed && (
+          <Typography
+            variant="overline"
+            sx={{
+              px: 2,
+              py: 1,
+              display: "block",
+              color: "var(--muted-foreground)",
+              fontWeight: 600,
+              fontSize: "0.75rem",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Marketing
+          </Typography>
+        )}
         <List sx={{ p: 0, mb: 3 }}>{marketingItems.map(renderNavItem)}</List>
 
         {/* Payments Section */}
-        <Typography
-          variant="overline"
-          sx={{
-            px: 2,
-            py: 1,
-            display: "block",
-            color: "var(--muted-foreground)",
-            fontWeight: 600,
-            fontSize: "0.75rem",
-            letterSpacing: "0.1em",
-          }}
-        >
-          Payments
-        </Typography>
+        {!isCollapsed && (
+          <Typography
+            variant="overline"
+            sx={{
+              px: 2,
+              py: 1,
+              display: "block",
+              color: "var(--muted-foreground)",
+              fontWeight: 600,
+              fontSize: "0.75rem",
+              letterSpacing: "0.1em",
+            }}
+          >
+            Payments
+          </Typography>
+        )}
         <List sx={{ p: 0, mb: 3 }}>{paymentsItems.map(renderNavItem)}</List>
 
         {/* System Section */}
-        <Typography
-          variant="overline"
-          sx={{
-            px: 2,
-            py: 1,
-            display: "block",
-            color: "var(--muted-foreground)",
-            fontWeight: 600,
-            fontSize: "0.75rem",
-            letterSpacing: "0.1em",
-          }}
-        >
-          System
-        </Typography>
+        {!isCollapsed && (
+          <Typography
+            variant="overline"
+            sx={{
+              px: 2,
+              py: 1,
+              display: "block",
+              color: "var(--muted-foreground)",
+              fontWeight: 600,
+              fontSize: "0.75rem",
+              letterSpacing: "0.1em",
+            }}
+          >
+            System
+          </Typography>
+        )}
         <List sx={{ p: 0 }}>{systemItems.map(renderNavItem)}</List>
       </Box>
-
       {/* User Profile Section */}
       <Box
         sx={{
-          // borderTop: "1px solid var(--border)",
           p: 2,
         }}
       >
@@ -228,6 +287,7 @@ const Sidebar: React.FC = () => {
             borderRadius: 2,
             cursor: "pointer",
             transition: "all 0.2s ease",
+            justifyContent: isCollapsed ? "center" : "flex-start",
             "&:hover": {
               backgroundColor: "var(--accent)",
             },
@@ -243,14 +303,16 @@ const Sidebar: React.FC = () => {
           >
             HN
           </Avatar>
-          <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography variant="body2" fontWeight={600} sx={{ color: "var(--foreground)" }}>
-              Harper Nelson
-            </Typography>
-            <Typography variant="caption" sx={{ color: "var(--muted-foreground)" }}>
-              Admin Manager
-            </Typography>
-          </Box>
+          {!isCollapsed && (
+            <Box sx={{ flex: 1, minWidth: 0 }}>
+              <Typography variant="body2" fontWeight={600} sx={{ color: "var(--foreground)" }}>
+                Harper Nelson
+              </Typography>
+              <Typography variant="caption" sx={{ color: "var(--muted-foreground)" }}>
+                Admin Manager
+              </Typography>
+            </Box>
+          )}
         </Box>
       </Box>
     </Drawer>

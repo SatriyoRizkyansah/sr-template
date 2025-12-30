@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, Avatar, Menu, MenuItem } from "@mui/material";
-import { Search as SearchIcon, Menu as MenuIcon, Logout } from "@mui/icons-material";
+import { Search as SearchIcon, Menu as MenuIcon, Logout, DarkMode as DarkModeIcon, LightMode as LightModeIcon } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useSidebar } from "./DashboardLayout";
+import { useTheme } from "../theme/useTheme";
 
-const drawerWidth = 280;
+const drawerWidth = 250;
+const drawerWidthCollapsed = 80;
 
 interface NavbarProps {
   title?: string;
@@ -12,6 +15,9 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const { isCollapsed } = useSidebar();
+  const { mode, toggleColorMode } = useTheme();
+  const currentWidth = isCollapsed ? drawerWidthCollapsed : drawerWidth;
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -31,15 +37,16 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
       position="fixed"
       elevation={0}
       sx={{
-        width: `calc(100% - ${drawerWidth}px)`,
-        ml: `${drawerWidth}px`,
+        width: `calc(100% - ${currentWidth}px)`,
+        ml: `${currentWidth}px`,
         backgroundColor: "var(--background)",
         // borderBottom: "1px solid var(--border)",
         color: "var(--foreground)",
         top: 0,
+        transition: "margin 0.3s ease, width 0.3s ease",
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between", minHeight: "64px !important", px: 3 }}>
+      <Toolbar sx={{ justifyContent: "space-between", minHeight: "64px !important", px: 3, pl: isCollapsed ? { xs: 3, sm: 5 } : 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton
             sx={{
@@ -95,6 +102,28 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
               }}
             />
           </Box>
+
+          <IconButton
+            onClick={toggleColorMode}
+            sx={{
+              color: "var(--foreground)",
+              backgroundColor: "var(--muted)",
+              border: "1px solid var(--border)",
+              width: 40,
+              height: 40,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "var(--radius)",
+              transition: "all var(--transition-fast)",
+              "&:hover": {
+                backgroundColor: "var(--accent)",
+                borderColor: "var(--primary)",
+              },
+            }}
+          >
+            {mode === "dark" ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
+          </IconButton>
 
           <Avatar
             onClick={handleMenuOpen}
