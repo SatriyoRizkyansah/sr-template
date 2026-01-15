@@ -1,6 +1,6 @@
 import React from "react";
-import { Box, Drawer, List, Typography, Avatar, IconButton, useMediaQuery } from "@mui/material";
-import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
+import { Box, Drawer, List, Typography, Avatar, IconButton, useMediaQuery, ListItemButton, ListItemIcon } from "@mui/material";
+import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, LogoutOutlined } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSidebar } from "./DashboardLayout";
 import SidebarNavItem from "./components/SidebarNavItem";
@@ -20,6 +20,10 @@ const Sidebar: React.FC = () => {
   const isActive = (path: string) => location.pathname === path;
 
   const renderNavItem = (item: (typeof marketingItems)[number]) => <SidebarNavItem key={item.title} item={item} active={isActive(item.path)} collapsed={isCollapsed} onNavigate={navigate} />;
+
+  const handleLogout = () => {
+    navigate("/login");
+  };
 
   return (
     <Drawer
@@ -311,11 +315,12 @@ const Sidebar: React.FC = () => {
             gap: 1.5,
             p: 1.5,
             borderRadius: 1.5,
+            border: "1px solid var(--border)",
             cursor: "pointer",
             transition: "all 0.2s ease",
             justifyContent: isCollapsed ? "center" : "flex-start",
             "&:hover": {
-              backgroundColor: "var(--accent)",
+              backgroundColor: "var(--card)",
             },
           }}
         >
@@ -325,6 +330,7 @@ const Sidebar: React.FC = () => {
               height: 36,
               backgroundColor: "var(--primary)",
               fontSize: "0.875rem",
+              fontWeight: 600,
             }}
           >
             HN
@@ -340,6 +346,32 @@ const Sidebar: React.FC = () => {
             </Box>
           )}
         </Box>
+        <ListItemButton
+          onClick={handleLogout}
+          sx={{
+            mt: 1,
+            borderRadius: 1.5,
+            border: "1px solid transparent",
+            color: "var(--destructive)",
+            px: isCollapsed ? 1 : 1.5,
+            py: 1,
+            gap: 1,
+            justifyContent: isCollapsed ? "center" : "flex-start",
+            "&:hover": {
+              borderColor: "var(--destructive)",
+              backgroundColor: "rgba(220, 38, 38, 0.08)",
+            },
+          }}
+        >
+          <ListItemIcon sx={{ minWidth: isCollapsed ? "auto" : 32, color: "inherit", justifyContent: "center" }}>
+            <LogoutOutlined fontSize="small" />
+          </ListItemIcon>
+          {!isCollapsed && (
+            <Typography variant="body2" fontWeight={600}>
+              Logout
+            </Typography>
+          )}
+        </ListItemButton>
       </Box>
     </Drawer>
   );

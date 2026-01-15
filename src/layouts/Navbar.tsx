@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, Avatar, Menu, MenuItem, useMediaQuery, useTheme as useMuiTheme } from "@mui/material";
-import { Search as SearchIcon, Logout, DarkMode as DarkModeIcon, LightMode as LightModeIcon, ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { Search as SearchIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon, ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
 import { useSidebar } from "./DashboardLayout";
 import { useTheme } from "../theme/useTheme";
 import CommandPalette from "../components/CommandPalette";
@@ -14,7 +13,6 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
-  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const { isCollapsed, setIsCollapsed } = useSidebar();
@@ -30,11 +28,6 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    handleMenuClose();
-    navigate("/login");
   };
 
   return (
@@ -212,20 +205,6 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
                   harper@example.com
                 </Typography>
               </Box>
-            </MenuItem>
-            <Box sx={{ height: 1, backgroundColor: muiTheme.palette.divider, mx: 1, my: 0.5 }} />
-            <MenuItem
-              onClick={handleLogout}
-              sx={{
-                py: 1.5,
-                color: muiTheme.palette.text.primary,
-                "&:hover": {
-                  backgroundColor: muiTheme.palette.action.hover,
-                },
-              }}
-            >
-              <Logout sx={{ mr: 1.5, fontSize: "1.125rem" }} />
-              <Typography variant="body2">Logout</Typography>
             </MenuItem>
           </Menu>
         </Box>

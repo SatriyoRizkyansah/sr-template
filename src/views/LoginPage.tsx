@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Box, Card, CardContent, TextField, Button, Typography, IconButton, InputAdornment, Divider, Stack, Link, Alert, Container } from "@mui/material";
-import { Visibility, VisibilityOff, Google, GitHub, LoginOutlined } from "@mui/icons-material";
+import { Box, Card, CardContent, TextField, Button, Typography, IconButton, InputAdornment, Stack, Link, Alert, Container } from "@mui/material";
+import { Visibility, VisibilityOff, LoginOutlined } from "@mui/icons-material";
 
 interface LoginFormData {
   email: string;
@@ -44,11 +44,6 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleSocialLogin = (provider: string) => {
-    console.log(`Login with ${provider}`);
-    alert(`${provider} login clicked! (Not implemented)`);
-  };
-
   return (
     <Container component="main" maxWidth="sm">
       <Box
@@ -58,6 +53,8 @@ const LoginPage: React.FC = () => {
           flexDirection: "column",
           justifyContent: "center",
           py: 4,
+          backgroundColor: "var(--background)",
+          transition: "background-color 0.3s ease",
         }}
       >
         <Card
@@ -66,6 +63,8 @@ const LoginPage: React.FC = () => {
             width: "100%",
             mx: "auto",
             boxShadow: "var(--shadow-lg)",
+            backgroundColor: "var(--card)",
+            border: "1px solid var(--border)",
           }}
         >
           <CardContent sx={{ p: 4 }}>
@@ -87,11 +86,11 @@ const LoginPage: React.FC = () => {
                 <LoginOutlined sx={{ fontSize: 32 }} />
               </Box>
 
-              <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600 }}>
+              <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 600, color: "var(--foreground)" }}>
                 Welcome Back
               </Typography>
 
-              <Typography variant="body1" color="text.secondary">
+              <Typography variant="body1" sx={{ color: "var(--muted-foreground)" }}>
                 Sign in to your account to continue
               </Typography>
             </Box>
@@ -118,6 +117,27 @@ const LoginPage: React.FC = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "var(--radius-md)",
+                      backgroundColor: "var(--input)",
+                      color: "var(--foreground)",
+                      "& fieldset": {
+                        borderColor: "var(--border)",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "var(--border)",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "var(--primary)",
+                      },
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "var(--muted-foreground)",
+                      opacity: 1,
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "var(--muted-foreground)",
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "var(--primary)",
                     },
                   }}
                 />
@@ -134,7 +154,7 @@ const LoginPage: React.FC = () => {
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="end">
-                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" aria-label="toggle password visibility">
+                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" aria-label="toggle password visibility" sx={{ color: "var(--muted-foreground)" }}>
                           {showPassword ? <VisibilityOff /> : <Visibility />}
                         </IconButton>
                       </InputAdornment>
@@ -143,6 +163,27 @@ const LoginPage: React.FC = () => {
                   sx={{
                     "& .MuiOutlinedInput-root": {
                       borderRadius: "var(--radius-md)",
+                      backgroundColor: "var(--input)",
+                      color: "var(--foreground)",
+                      "& fieldset": {
+                        borderColor: "var(--border)",
+                      },
+                      "&:hover fieldset": {
+                        borderColor: "var(--border)",
+                      },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "var(--primary)",
+                      },
+                    },
+                    "& .MuiInputBase-input::placeholder": {
+                      color: "var(--muted-foreground)",
+                      opacity: 1,
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: "var(--muted-foreground)",
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {
+                      color: "var(--primary)",
                     },
                   }}
                 />
@@ -183,61 +224,9 @@ const LoginPage: React.FC = () => {
               </Link>
             </Box>
 
-            {/* Divider */}
-            <Box sx={{ my: 3 }}>
-              <Divider>
-                <Typography variant="body2" color="text.secondary">
-                  Or continue with
-                </Typography>
-              </Divider>
-            </Box>
-
-            {/* Social Login */}
-            <Stack direction="row" spacing={2}>
-              <Button
-                fullWidth
-                variant="outlined"
-                startIcon={<Google />}
-                onClick={() => handleSocialLogin("Google")}
-                sx={{
-                  py: 1.5,
-                  borderRadius: "var(--radius-md)",
-                  textTransform: "none",
-                  borderColor: "var(--border)",
-                  color: "var(--foreground)",
-                  "&:hover": {
-                    borderColor: "var(--border)",
-                    backgroundColor: "var(--accent)",
-                  },
-                }}
-              >
-                Google
-              </Button>
-
-              <Button
-                fullWidth
-                variant="outlined"
-                startIcon={<GitHub />}
-                onClick={() => handleSocialLogin("GitHub")}
-                sx={{
-                  py: 1.5,
-                  borderRadius: "var(--radius-md)",
-                  textTransform: "none",
-                  borderColor: "var(--border)",
-                  color: "var(--foreground)",
-                  "&:hover": {
-                    borderColor: "var(--border)",
-                    backgroundColor: "var(--accent)",
-                  },
-                }}
-              >
-                GitHub
-              </Button>
-            </Stack>
-
             {/* Sign Up Link */}
             <Box sx={{ textAlign: "center", mt: 3 }}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" sx={{ color: "var(--muted-foreground)" }}>
                 Don't have an account?{" "}
                 <Link
                   href="#"
@@ -265,10 +254,10 @@ const LoginPage: React.FC = () => {
                 border: "1px solid var(--border)",
               }}
             >
-              <Typography variant="body2" color="text.secondary" sx={{ mb: 1, fontWeight: 600 }}>
+              <Typography variant="body2" sx={{ color: "var(--foreground)", mb: 1, fontWeight: 600 }}>
                 Demo Credentials:
               </Typography>
-              <Typography variant="body2" color="text.secondary" component="div">
+              <Typography variant="body2" sx={{ color: "var(--muted-foreground)" }} component="div">
                 Email: demo@example.com
                 <br />
                 Password: password

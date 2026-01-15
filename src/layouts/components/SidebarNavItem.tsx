@@ -1,5 +1,5 @@
 import React from "react";
-import { ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import { Box, ListItemButton, ListItemIcon, Typography } from "@mui/material";
 import type { NavItem } from "./sidebarItems";
 
 interface SidebarNavItemProps {
@@ -10,55 +10,74 @@ interface SidebarNavItemProps {
 }
 
 const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ item, active, collapsed, onNavigate }) => {
+  const showBadge = item.badge !== undefined && item.badge !== null;
+
   return (
     <ListItemButton
       key={item.title}
       onClick={() => onNavigate(item.path)}
       sx={{
         borderRadius: 1.5,
-        mb: 0.25,
+        mb: 0.5,
         py: 1,
-        px: 1.75,
-        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-        backgroundColor: active ? "var(--accent)" : "transparent",
-        color: active ? "var(--primary)" : "var(--foreground)",
-        justifyContent: "flex-start",
-        overflow: "hidden",
+        px: collapsed ? 1 : 1.5,
+        transition: "all 0.2s ease",
+        backgroundColor: active ? "var(--card)" : "transparent",
+        border: active ? "1px solid var(--border)" : "1px solid transparent",
+        color: active ? "var(--foreground)" : "var(--muted-foreground)",
+        justifyContent: collapsed ? "center" : "flex-start",
+        boxShadow: active ? "0 2px 8px rgba(15, 23, 42, 0.08)" : "none",
         "&:hover": {
-          backgroundColor: "var(--accent)",
-          color: "var(--primary)",
+          backgroundColor: "var(--card)",
+          borderColor: "var(--border)",
+          color: "var(--foreground)",
         },
       }}
     >
       <ListItemIcon
         sx={{
-          minWidth: 36,
+          minWidth: collapsed ? "auto" : 36,
           color: "inherit",
-          opacity: active ? 1 : 0.7,
           justifyContent: "flex-start",
           flex: "0 0 auto",
+          mr: collapsed ? 0 : 1,
         }}
       >
         {item.icon}
       </ListItemIcon>
-      <ListItemText
-        primary={item.title}
-        sx={{
-          ml: collapsed ? 0 : 1,
-          flex: collapsed ? "0 0 auto" : "1 1 auto",
-          minWidth: 0,
-          maxWidth: collapsed ? 0 : 200,
-          opacity: collapsed ? 0 : 1,
-          overflow: "hidden",
-          transition: "max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, margin 0.3s ease",
-          whiteSpace: "nowrap",
-          pointerEvents: collapsed ? "none" : "auto",
-          "& .MuiListItemText-primary": {
-            fontSize: "0.875rem",
-            fontWeight: active ? 600 : 500,
-          },
-        }}
-      />
+
+      {!collapsed && (
+        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 1 }}>
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: active ? 600 : 500,
+              color: "inherit",
+              transition: "color 0.2s ease",
+            }}
+          >
+            {item.title}
+          </Typography>
+          {showBadge && (
+            <Box
+              component="span"
+              sx={{
+                minWidth: 24,
+                px: 0.75,
+                py: 0.25,
+                borderRadius: 9999,
+                fontSize: "0.7rem",
+                fontWeight: 600,
+                textAlign: "center",
+                backgroundColor: active ? "rgba(2, 132, 199, 0.15)" : "var(--muted)",
+                color: active ? "var(--primary)" : "var(--muted-foreground)",
+              }}
+            >
+              {item.badge}
+            </Box>
+          )}
+        </Box>
+      )}
     </ListItemButton>
   );
 };
