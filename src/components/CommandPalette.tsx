@@ -1,20 +1,9 @@
 import React from "react";
 import { Command } from "cmdk";
 import { useNavigate } from "react-router-dom";
+import { Dialog, DialogContent, Box } from "@mui/material";
 import { useTheme } from "../theme/useTheme";
-import {
-  Dashboard as DashboardIcon,
-  ShoppingCart as MarketplaceIcon,
-  Assignment as OrdersIcon,
-  TrendingUp as TrackingIcon,
-  People as CustomersIcon,
-  LocalOffer as DiscountsIcon,
-  Receipt as LedgerIcon,
-  AccountBalance as TaxesIcon,
-  Settings as SettingsIcon,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon,
-} from "@mui/icons-material";
+import { KeyboardArrowRightRounded as ArrowIcon } from "@mui/icons-material";
 import "./CommandPalette.css";
 
 interface CommandPaletteProps {
@@ -23,13 +12,16 @@ interface CommandPaletteProps {
 }
 
 const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen: externalOpen, onOpenChange }) => {
-  const [open, setOpen] = React.useState(false);
+  const [internalOpen, setInternalOpen] = React.useState(false);
   const navigate = useNavigate();
   const { mode, toggleColorMode } = useTheme();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const currentOpen = externalOpen !== undefined ? externalOpen : open;
+  const currentOpen = externalOpen !== undefined ? externalOpen : internalOpen;
   const setCurrentOpen = (newOpen: boolean) => {
-    setOpen(newOpen);
+    if (externalOpen === undefined) {
+      setInternalOpen(newOpen);
+    }
     onOpenChange?.(newOpen);
   };
 
@@ -51,75 +43,125 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen: externalOpen, o
     setCurrentOpen(false);
   };
 
+  React.useEffect(() => {
+    if (currentOpen) {
+      requestAnimationFrame(() => {
+        inputRef.current?.focus();
+      });
+    }
+  }, [currentOpen]);
+
+  const commandSections = [
+    {
+      heading: "Pages",
+      items: [
+        { label: "Dashboard", path: "/dashboard", keywords: ["home", "dashboard", "overview"] },
+        { label: "Marketplace", path: "/marketplace", keywords: ["shop", "marketplace", "store"] },
+        { label: "Orders", path: "/orders", keywords: ["order", "orders", "purchases"] },
+        { label: "Tracking", path: "/tracking", keywords: ["track", "tracking", "shipment"] },
+        { label: "Customers", path: "/customers", keywords: ["customer", "customers", "users", "people"] },
+        { label: "Discounts", path: "/discounts", keywords: ["discount", "discounts", "promo", "offer"] },
+      ],
+    },
+    {
+      heading: "Finance",
+      items: [
+        { label: "Ledger", path: "/ledger", keywords: ["ledger", "accounting", "books"] },
+        { label: "Taxes", path: "/taxes", keywords: ["tax", "taxes", "finance"] },
+      ],
+    },
+    {
+      heading: "Components",
+      items: [{ label: "Settings", path: "/settings", keywords: ["setting", "settings", "config", "configuration"] }],
+    },
+  ];
+
+  const renderCommandItem = (item: { label: string; keywords: string[]; action: () => void; value: string }) => {
+    const handleAction = () => {
+      item.action();
+    };
+
+    return (
+      <Command.Item
+        key={item.value}
+        value={item.value}
+        keywords={item.keywords}
+        className="command-item"
+        onSelect={handleAction}
+        onPointerDown={(event) => {
+          event.preventDefault();
+          handleAction();
+        }}
+      >
+        <span className="command-arrow">
+          <ArrowIcon fontSize="small" />
+        </span>
+        <span className="command-item-label">{item.label}</span>
+      </Command.Item>
+    );
+  };
+
   return (
-    <Command.Dialog open={currentOpen} onOpenChange={setCurrentOpen}>
-      <div className="cmdk-wrapper">
-        <Command.Input placeholder="Search pages, actions... (Cmd+K)" className="cmdk-input" />
-        <Command.List className="cmdk-list">
-          <Command.Empty>No results found.</Command.Empty>
+    <Dialog
+      open={currentOpen}
+      onClose={() => setCurrentOpen(false)}
+      fullWidth
+      maxWidth="sm"
+      slotProps={{
+        backdrop: {
+          sx: {
+            backgroundColor: "rgba(15, 23, 42, 0.65)",
+            backdropFilter: "blur(4px)",
+          },
+        },
+        paper: {
+          sx: {
+            background: "transparent",
+            boxShadow: "none",
+          },
+        },
+      }}
+    >
+      <DialogContent sx={{ p: 0 }}>
+        <Box className="command-dialog">
+          <Command label="Global command menu" className="command-root">
+            <div className="command-input-wrapper">
+              <Command.Input ref={inputRef} autoFocus placeholder="Search pages, actions... (Cmd+K)" className="command-input" />
+            </div>
+            <Command.List className="command-list">
+              <Command.Empty className="command-empty">No results found.</Command.Empty>
 
-          <Command.Group heading="Pages" className="cmdk-group">
-            <Command.Item onSelect={() => handleNavigation("/dashboard")} keywords={["home", "dashboard", "overview"]} value="dashboard" className="cmdk-item">
-              <DashboardIcon className="cmdk-icon" />
-              Dashboard
-            </Command.Item>
-            <Command.Item onSelect={() => handleNavigation("/marketplace")} keywords={["shop", "marketplace", "store"]} value="marketplace" className="cmdk-item">
-              <MarketplaceIcon className="cmdk-icon" />
-              Marketplace
-            </Command.Item>
-            <Command.Item onSelect={() => handleNavigation("/orders")} keywords={["order", "orders", "purchases"]} value="orders" className="cmdk-item">
-              <OrdersIcon className="cmdk-icon" />
-              Orders
-            </Command.Item>
-            <Command.Item onSelect={() => handleNavigation("/tracking")} keywords={["track", "tracking", "shipment"]} value="tracking" className="cmdk-item">
-              <TrackingIcon className="cmdk-icon" />
-              Tracking
-            </Command.Item>
-            <Command.Item onSelect={() => handleNavigation("/customers")} keywords={["customer", "customers", "users", "people"]} value="customers" className="cmdk-item">
-              <CustomersIcon className="cmdk-icon" />
-              Customers
-            </Command.Item>
-            <Command.Item onSelect={() => handleNavigation("/discounts")} keywords={["discount", "discounts", "promo", "offer"]} value="discounts" className="cmdk-item">
-              <DiscountsIcon className="cmdk-icon" />
-              Discounts
-            </Command.Item>
-          </Command.Group>
+              {commandSections.map((section) => (
+                <Command.Group key={section.heading} className="command-group">
+                  <div className="command-heading">{section.heading}</div>
+                  {section.items.map((item) =>
+                    renderCommandItem({
+                      label: item.label,
+                      keywords: item.keywords,
+                      value: item.label.toLowerCase(),
+                      action: () => handleNavigation(item.path),
+                    }),
+                  )}
+                </Command.Group>
+              ))}
 
-          <Command.Group heading="Finance" className="cmdk-group">
-            <Command.Item onSelect={() => handleNavigation("/ledger")} keywords={["ledger", "accounting", "books"]} value="ledger" className="cmdk-item">
-              <LedgerIcon className="cmdk-icon" />
-              Ledger
-            </Command.Item>
-            <Command.Item onSelect={() => handleNavigation("/taxes")} keywords={["tax", "taxes", "finance"]} value="taxes" className="cmdk-item">
-              <TaxesIcon className="cmdk-icon" />
-              Taxes
-            </Command.Item>
-          </Command.Group>
-
-          <Command.Group heading="Settings" className="cmdk-group">
-            <Command.Item onSelect={() => handleNavigation("/settings")} keywords={["setting", "settings", "config", "configuration"]} value="settings" className="cmdk-item">
-              <SettingsIcon className="cmdk-icon" />
-              Settings
-            </Command.Item>
-          </Command.Group>
-
-          <Command.Group heading="Theme" className="cmdk-group">
-            <Command.Item
-              onSelect={() => {
-                toggleColorMode();
-                setCurrentOpen(false);
-              }}
-              keywords={["theme", "mode", "dark", "light"]}
-              value="theme"
-              className="cmdk-item"
-            >
-              {mode === "dark" ? <LightModeIcon className="cmdk-icon" /> : <DarkModeIcon className="cmdk-icon" />}
-              Toggle {mode === "dark" ? "Light" : "Dark"} Mode
-            </Command.Item>
-          </Command.Group>
-        </Command.List>
-      </div>
-    </Command.Dialog>
+              <Command.Group className="command-group">
+                <div className="command-heading">Theme</div>
+                {renderCommandItem({
+                  label: `Toggle ${mode === "dark" ? "Light" : "Dark"} Mode`,
+                  keywords: ["theme", "mode", "dark", "light"],
+                  value: "theme-toggle",
+                  action: () => {
+                    toggleColorMode();
+                    setCurrentOpen(false);
+                  },
+                })}
+              </Command.Group>
+            </Command.List>
+          </Command>
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 };
 
