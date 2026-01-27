@@ -10,7 +10,19 @@ const Loader: React.FC<LoaderProps> = ({ label = "Loading" }) => {
   const blades = Array.from({ length: 12 });
 
   return (
-    <div className="loader-wrapper" role="status" aria-live="polite">
+    <div
+      className="loader-wrapper"
+      role="status"
+      aria-live="polite"
+      style={{
+        position: "fixed",
+        inset: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 9999,
+      }}
+    >
       <div className="loader-card">
         <div className="spinner" aria-hidden="true">
           {blades.map((_, index) => (

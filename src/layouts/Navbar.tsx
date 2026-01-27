@@ -44,6 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
         color: "var(--foreground)",
         top: 0,
         transition: "margin 0.3s ease, width 0.3s ease",
+        borderBottom: "1px solid var(--border)",
       }}
     >
       <Toolbar sx={{ justifyContent: "space-between", minHeight: "64px !important", px: 3, pl: isCollapsed ? { xs: 3, sm: 5 } : 3 }}>

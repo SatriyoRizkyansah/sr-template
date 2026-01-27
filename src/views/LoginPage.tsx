@@ -89,7 +89,7 @@ const LoginPage: React.FC = () => {
                   width: 56,
                   height: 56,
                   borderRadius: "18px",
-                  backgroundColor: "var(--foreground)",
+                  backgroundColor: "var(--primary)",
                   color: "var(--background)",
                   mb: 2,
                 }}
@@ -235,10 +235,10 @@ const LoginPage: React.FC = () => {
                   size="large"
                   disabled={isLoading}
                   sx={{
-                    py: 1.4,
+                    py: 1.2,
                     borderRadius: "16px",
                     textTransform: "none",
-                    fontSize: "1rem",
+                    fontSize: "0.8rem",
                     fontWeight: 600,
                     backgroundColor: "var(--foreground)",
                     color: "var(--background)",
