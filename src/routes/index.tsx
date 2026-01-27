@@ -1,16 +1,17 @@
-import React, { useMemo } from "react";
+import React, { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import LoginPage from "../views/LoginPage";
-import DashboardPage from "../views/DashboardPage";
-import MarketplacePage from "../views/MarketplacePage";
-import OrdersPage from "../views/OrdersPage";
-import SettingsPage from "../views/SettingsPage";
-import NotFoundPage from "../views/NotFoundPage";
+import Loader from "../components/loading/Loader";
+
+const LoginPage = lazy(() => import("../views/LoginPage"));
+const DashboardPage = lazy(() => import("../views/DashboardPage"));
+const MarketplacePage = lazy(() => import("../views/MarketplacePage"));
+const OrdersPage = lazy(() => import("../views/OrdersPage"));
+const SettingsPage = lazy(() => import("../views/SettingsPage"));
+const NotFoundPage = lazy(() => import("../views/NotFoundPage"));
 
 export const AppRoutes: React.FC = () => {
-  // Optimized routes with useMemo to prevent unnecessary re-renders
-  const routes = useMemo(
-    () => (
+  return (
+    <Suspense fallback={<Loader />}>
       <Routes>
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
@@ -33,11 +34,8 @@ export const AppRoutes: React.FC = () => {
         {/* 404 Not Found */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-    ),
-    []
-  ); // Empty dependency array since routes are static
-
-  return routes;
+    </Suspense>
+  );
 };
 
 export default AppRoutes;

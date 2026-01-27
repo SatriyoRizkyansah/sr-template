@@ -163,7 +163,7 @@ const MarketplacePage: React.FC = () => {
         width: "12%",
       },
     ],
-    []
+    [],
   );
 
   return (

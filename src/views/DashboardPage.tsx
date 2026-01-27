@@ -87,11 +87,11 @@ const DashboardPage: React.FC = () => {
                         width: 44,
                         height: 44,
                         borderRadius: "10px",
-                        background: "linear-gradient(135deg, var(--primary) 0%, #0284c7 100%)",
+                        backgroundColor: "var(--primary)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        color: "white",
+                        color: "var(--primary-foreground)",
                       }}
                     >
                       <Icon fontSize="medium" />
@@ -114,7 +114,7 @@ const DashboardPage: React.FC = () => {
                   <Typography
                     variant="body2"
                     sx={{
-                      color: stat.change.startsWith("+") ? "#059669" : "#dc2626",
+                      color: stat.change.startsWith("+") ? "var(--success)" : "var(--danger)",
                       fontWeight: 600,
                       fontSize: "0.875rem",
                     }}
@@ -254,7 +254,7 @@ const DashboardPage: React.FC = () => {
                         sx={{
                           width: `${product.percentage}%`,
                           height: "100%",
-                          background: "linear-gradient(90deg, var(--primary) 0%, #0284c7 100%)",
+                          backgroundColor: "var(--primary)",
                           borderRadius: "3px",
                         }}
                       />

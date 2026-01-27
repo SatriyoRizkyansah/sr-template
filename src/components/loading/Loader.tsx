@@ -1,0 +1,28 @@
+import React from "react";
+import "./Loader.css";
+
+interface LoaderProps {
+  label?: string;
+  hint?: string;
+}
+
+const Loader: React.FC<LoaderProps> = ({ label = "Loading" }) => {
+  const blades = Array.from({ length: 12 });
+
+  return (
+    <div className="loader-wrapper" role="status" aria-live="polite">
+      <div className="loader-card">
+        <div className="spinner" aria-hidden="true">
+          {blades.map((_, index) => (
+            <div key={index} className="spinner-blade" />
+          ))}
+        </div>
+        <p className="loader-label">{label}</p>
+        {/* <p className="loader-hint">{hint}</p> */}
+      </div>
+      <span className="sr-only">{label}</span>
+    </div>
+  );
+};
+
+export default Loader;

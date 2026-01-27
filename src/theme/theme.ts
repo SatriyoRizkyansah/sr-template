@@ -3,49 +3,57 @@ import { extendTheme } from "@mui/material/styles";
 const paletteTokens = {
   light: {
     primary: {
-      main: "#0284c7",
+      main: "#ef4444",
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#e9eef5",
-      contrastText: "#1e293b",
+      main: "#f4f4f5",
+      contrastText: "#18181b",
+    },
+    success: {
+      main: "#16a34a",
+      contrastText: "#ffffff",
     },
     error: {
       main: "#dc2626",
       contrastText: "#ffffff",
     },
     background: {
-      default: "#f8fafc",
+      default: "#ffffff",
       paper: "#ffffff",
     },
     text: {
-      primary: "#0f172a",
-      secondary: "#64748b",
+      primary: "#09090b",
+      secondary: "#71717a",
     },
-    divider: "#dbe3ec",
+    divider: "#e4e4e7",
   },
   dark: {
     primary: {
-      main: "#38bdf8",
-      contrastText: "#020617",
+      main: "#f87171",
+      contrastText: "#18181b",
     },
     secondary: {
-      main: "#1f1f23",
-      contrastText: "#e5e7eb",
+      main: "#27272a",
+      contrastText: "#fafafa",
+    },
+    success: {
+      main: "#4ade80",
+      contrastText: "#052e16",
     },
     error: {
-      main: "#ef4444",
-      contrastText: "#020617",
+      main: "#f87171",
+      contrastText: "#18181b",
     },
     background: {
       default: "#09090b",
-      paper: "#111113",
+      paper: "#09090b",
     },
     text: {
       primary: "#fafafa",
-      secondary: "#9ca3af",
+      secondary: "#a1a1aa",
     },
-    divider: "#2a2a30",
+    divider: "#27272a",
   },
 } as const;
 

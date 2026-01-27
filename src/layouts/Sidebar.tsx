@@ -102,7 +102,7 @@ const Sidebar: React.FC = () => {
               top: "50%",
               transform: "translateY(-50%)",
               color: "white",
-              backgroundColor: "rgba(14, 165, 233, 0.85)",
+              backgroundColor: "rgb(36, 42, 43)",
               width: 28,
               height: 28,
               padding: 0,
@@ -115,7 +115,7 @@ const Sidebar: React.FC = () => {
               borderRadius: "4px",
               fontSize: "0.875rem",
               "&:hover": {
-                backgroundColor: "rgba(14, 165, 233, 1)",
+                backgroundColor: "rgb(68, 68, 68)",
                 transform: "translateY(-50%) scale(1.1)",
                 boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
               },
@@ -330,7 +330,8 @@ const Sidebar: React.FC = () => {
               height: 36,
               backgroundColor: "var(--primary)",
               fontSize: "0.875rem",
-              fontWeight: 600,
+              fontWeight: 700,
+              color: "white",
             }}
           >
             HN

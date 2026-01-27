@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, Avatar, Menu, MenuItem, useMediaQuery, useTheme as useMuiTheme } from "@mui/material";
-import { Search as SearchIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon, ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon } from "@mui/icons-material";
+import { Search as SearchIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon } from "@mui/icons-material";
 import { useSidebar } from "./DashboardLayout";
 import { useTheme } from "../theme/useTheme";
 import CommandPalette from "../components/CommandPalette";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
@@ -47,25 +48,30 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
     >
       <Toolbar sx={{ justifyContent: "space-between", minHeight: "64px !important", px: 3, pl: isCollapsed ? { xs: 3, sm: 5 } : 3 }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <IconButton
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            sx={{
-              display: { xs: "flex", md: "none" },
-              color: muiTheme.palette.text.primary,
-              backgroundColor: muiTheme.palette.action.hover,
-              border: `1px solid ${muiTheme.palette.divider}`,
-              borderRadius: muiTheme.shape.borderRadius,
-              width: 40,
-              height: 40,
-              transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-              "&:hover": {
-                backgroundColor: muiTheme.palette.action.selected,
-                borderColor: muiTheme.palette.primary.main,
-              },
-            }}
-          >
-            {isCollapsed ? <ChevronRightIcon fontSize="small" /> : <ChevronLeftIcon fontSize="small" />}
-          </IconButton>
+          {isMobile && (
+            <IconButton
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              sx={{
+                color: "var(--foreground)",
+                backgroundColor: "var(--muted)",
+                border: "1px solid var(--border)",
+                width: 36,
+                height: 36,
+                borderRadius: "var(--radius)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+                mr: 1,
+                "&:hover": {
+                  backgroundColor: "var(--accent)",
+                  borderColor: "var(--primary)",
+                },
+              }}
+            >
+              <MenuOutlinedIcon fontSize="small" />
+            </IconButton>
+          )}
           <Typography
             variant="h5"
             fontWeight={700}
@@ -178,10 +184,13 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
               paper: {
                 sx: {
                   mt: 1.5,
-                  boxShadow: muiTheme.shadows[9],
-                  border: `1px solid ${muiTheme.palette.divider}`,
-                  borderRadius: muiTheme.shape.borderRadius,
-                  minWidth: 200,
+                  backgroundColor: "var(--card)",
+                  color: "var(--card-foreground)",
+                  boxShadow: "var(--shadow-lg)",
+                  border: "1px solid var(--border)",
+                  borderRadius: "var(--radius-lg)",
+                  minWidth: 220,
+                  overflow: "hidden",
                 },
               },
             }}
@@ -189,19 +198,32 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
             <MenuItem
               disabled
               sx={{
-                color: muiTheme.palette.text.primary,
+                color: "var(--foreground)",
                 py: 1.5,
                 "&.Mui-disabled": {
                   opacity: 1,
+                  backgroundColor: "var(--card)",
                 },
               }}
             >
-              <Avatar sx={{ width: 28, height: 28, mr: 1.5, backgroundColor: muiTheme.palette.primary.main }}>HN</Avatar>
+              <Avatar
+                sx={{
+                  width: 32,
+                  height: 32,
+                  mr: 1.5,
+                  backgroundColor: "var(--primary)",
+                  color: "var(--primary-foreground)",
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                }}
+              >
+                HN
+              </Avatar>
               <Box>
                 <Typography variant="body2" fontWeight={600}>
                   Harper Nelson
                 </Typography>
-                <Typography variant="caption" sx={{ color: muiTheme.palette.text.secondary }}>
+                <Typography variant="caption" sx={{ color: "var(--muted-foreground)" }}>
                   harper@example.com
                 </Typography>
               </Box>

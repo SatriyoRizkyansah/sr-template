@@ -5,8 +5,11 @@
   --card: #ffffff;
   --card-foreground: #09090b;
 
-  --primary: #ef4444;
-  --primary-foreground: #ffffff;
+  --popover: #ffffff;
+  --popover-foreground: #09090b;
+
+  --primary: #18181b;
+  --primary-foreground: #fafafa;
 
   --secondary: #f4f4f5;
   --secondary-foreground: #18181b;
@@ -19,13 +22,7 @@
 
   --destructive: #ef4444;
 
-  --success: #16a34a;
-  --success-foreground: #ffffff;
-
-  --danger: #dc2626;
-  --danger-foreground: #ffffff;
-
   --border: #e4e4e7;
   --input: #e4e4e7;
-  --ring: #ef4444;
+  --ring: #18181b;
 }
