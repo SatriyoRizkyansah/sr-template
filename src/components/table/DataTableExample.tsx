@@ -75,8 +75,6 @@ const EXAMPLE_USERS: User[] = [
  * ```
  */
 export const DataTableExample: React.FC = () => {
-  const [selectedUsers, setSelectedUsers] = React.useState<User[]>([]);
-
   // Define table columns
   const columns: Column<User>[] = useMemo(
     () => [
@@ -127,7 +125,7 @@ export const DataTableExample: React.FC = () => {
         width: "15%",
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -140,32 +138,15 @@ export const DataTableExample: React.FC = () => {
         title="All Users"
         searchPlaceholder="Search by name, email, or role..."
         rowsPerPageOptions={[5, 10, 25, 50]}
-        selectable
-        onSelectionChange={setSelectedUsers}
         onRowClick={(user) => console.log("Row clicked:", user)}
         compact
+        filterField="status"
+        filterLabel="Status"
+        filterOptions={[
+          { label: "Active", value: "active" },
+          { label: "Inactive", value: "inactive" },
+        ]}
       />
-
-      {selectedUsers.length > 0 && (
-        <div
-          style={{
-            marginTop: "2rem",
-            padding: "1rem",
-            backgroundColor: "var(--card)",
-            borderRadius: "8px",
-            border: "1px solid var(--border)",
-          }}
-        >
-          <h3 style={{ color: "var(--foreground)", marginBottom: "1rem" }}>Selected Users ({selectedUsers.length})</h3>
-          <ul style={{ color: "var(--foreground)", lineHeight: 1.8 }}>
-            {selectedUsers.map((user) => (
-              <li key={user.id}>
-                {user.name} ({user.email})
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 };

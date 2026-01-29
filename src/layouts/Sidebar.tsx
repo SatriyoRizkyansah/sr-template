@@ -72,7 +72,7 @@ const Sidebar: React.FC = () => {
           </Box>
           {!isCollapsed && (
             <Typography variant="h6" fontWeight={600} sx={{ color: "var(--foreground)" }}>
-              Flup
+              Test
             </Typography>
           )}
         </Box>

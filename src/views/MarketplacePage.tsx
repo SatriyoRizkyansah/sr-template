@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
-import { Typography, Box, Chip } from "@mui/material";
+import { Typography, Box, Chip, Button, Stack, TextField, MenuItem, InputAdornment } from "@mui/material";
 import { DataTable, type Column } from "../components/table";
+import Modal, { type ModalSection } from "../components/modal";
 
 // Product data type
 interface Product {
@@ -99,8 +100,87 @@ const PRODUCTS: Product[] = [
   },
 ];
 
+const CATEGORY_OPTIONS = ["Electronics", "Accessories", "Office"];
+const STATUS_OPTIONS: Product["status"][] = ["active", "inactive"];
+
 const MarketplacePage: React.FC = () => {
-  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    category: CATEGORY_OPTIONS[0],
+    price: "",
+    stock: "",
+    status: STATUS_OPTIONS[0],
+  });
+
+  const resetProductForm = () =>
+    setNewProduct({
+      name: "",
+      category: CATEGORY_OPTIONS[0],
+      price: "",
+      stock: "",
+      status: STATUS_OPTIONS[0],
+    });
+
+  const handleFieldChange = (field: keyof typeof newProduct) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setNewProduct((prev) => ({
+      ...prev,
+      [field]: event.target.value,
+    }));
+  };
+
+  const productModalSections: ModalSection[] = [
+    {
+      title: "Product details",
+      description: "Basic information about your item",
+      content: (
+        <Stack spacing={1.5}>
+          <TextField label="Product name" size="small" fullWidth value={newProduct.name} onChange={handleFieldChange("name")} />
+          <TextField label="Category" select size="small" fullWidth value={newProduct.category} onChange={handleFieldChange("category")}>
+            {CATEGORY_OPTIONS.map((category) => (
+              <MenuItem key={category} value={category}>
+                {category}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Stack direction={{ xs: "column", sm: "row" }} spacing={1.5}>
+            <TextField
+              label="Price"
+              size="small"
+              fullWidth
+              type="number"
+              value={newProduct.price}
+              onChange={handleFieldChange("price")}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start" sx={{ color: "var(--muted-foreground)", fontWeight: 600 }}>
+                    $
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <TextField label="Stock" size="small" fullWidth type="number" value={newProduct.stock} onChange={handleFieldChange("stock")} />
+          </Stack>
+        </Stack>
+      ),
+    },
+    {
+      title: "Visibility",
+      description: "Control status and availability",
+      content: (
+        <Stack spacing={1.5}>
+          <TextField label="Status" select size="small" fullWidth value={newProduct.status} onChange={handleFieldChange("status")}>
+            {STATUS_OPTIONS.map((status) => (
+              <MenuItem key={status} value={status}>
+                {status === "active" ? "Active" : "Inactive"}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField label="Short description" multiline minRows={2} size="small" fullWidth placeholder="Add any special notes" />
+        </Stack>
+      ),
+    },
+  ];
 
   // Define table columns
   const columns: Column<Product>[] = useMemo(
@@ -169,13 +249,19 @@ const MarketplacePage: React.FC = () => {
   return (
     <DashboardLayout title="Marketplace">
       <Box sx={{ py: 2, px: 3 }}>
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="h4" sx={{ color: "var(--foreground)", mb: 0.5 }}>
-            Marketplace
-          </Typography>
-          <Typography variant="body2" sx={{ color: "var(--muted-foreground)" }}>
-            Manage your products and inventory
-          </Typography>
+        <Box sx={{ mb: 3, display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, justifyContent: "space-between", alignItems: { xs: "flex-start", sm: "center" } }}>
+          <Box>
+            <Typography variant="h4" sx={{ color: "var(--foreground)", mb: 0.5 }}>
+              Marketplace
+            </Typography>
+            <Typography variant="body2" sx={{ color: "var(--muted-foreground)" }}>
+              Manage your products and inventory
+            </Typography>
+          </Box>
+
+          <Button variant="contained" onClick={() => setIsModalOpen(true)} sx={{ borderRadius: "var(--radius)", textTransform: "none", fontWeight: 600 }}>
+            Add product
+          </Button>
         </Box>
 
         {/* DataTable Implementation */}
@@ -185,8 +271,6 @@ const MarketplacePage: React.FC = () => {
           title="Products"
           searchPlaceholder="Search by product name, category..."
           rowsPerPageOptions={[5, 10, 25, 50]}
-          selectable
-          onSelectionChange={setSelectedProducts}
           onRowClick={(product) => {
             console.log("Product clicked:", product);
             // You can add navigation or modal here
@@ -194,49 +278,35 @@ const MarketplacePage: React.FC = () => {
           compact
         />
 
-        {/* Selected Products Summary */}
-        {selectedProducts.length > 0 && (
-          <Box
-            sx={{
-              mt: 3,
-              p: 2,
-              backgroundColor: "var(--card)",
-              borderRadius: 1,
-              border: "1px solid var(--border)",
-            }}
-          >
-            <Typography variant="h6" sx={{ color: "var(--foreground)", mb: 1.5 }}>
-              Selected Products ({selectedProducts.length})
-            </Typography>
-
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-                gap: 2,
-              }}
-            >
-              {selectedProducts.map((product) => (
-                <Box
-                  key={product.id}
-                  sx={{
-                    p: 2,
-                    backgroundColor: "var(--background)",
-                    borderRadius: 1,
-                    border: "1px solid var(--border)",
-                  }}
-                >
-                  <Typography variant="subtitle2" sx={{ color: "var(--foreground)", fontWeight: 600 }}>
-                    {product.name}
-                  </Typography>
-                  <Typography variant="caption" sx={{ color: "var(--muted-foreground)", display: "block", mt: 0.5 }}>
-                    ${product.price.toFixed(2)} • {product.stock} in stock
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-          </Box>
-        )}
+        <Modal
+          open={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            resetProductForm();
+          }}
+          title="Add new product"
+          description="Keep your catalog up to date by filling in the details below."
+          sections={productModalSections}
+          actions={[
+            {
+              label: "Cancel",
+              variant: "ghost",
+              onClick: () => {
+                setIsModalOpen(false);
+                resetProductForm();
+              },
+            },
+            {
+              label: "Save product",
+              variant: "primary",
+              onClick: () => {
+                console.log("New product payload", newProduct);
+                setIsModalOpen(false);
+                resetProductForm();
+              },
+            },
+          ]}
+        />
       </Box>
     </DashboardLayout>
   );

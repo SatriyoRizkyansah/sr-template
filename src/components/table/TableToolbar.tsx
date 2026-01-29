@@ -15,11 +15,13 @@ export const TableToolbar: React.FC<TableToolbarProps> = ({ searchValue, onSearc
         flexWrap: "wrap",
       }}
     >
-      {title && (
-        <Box component="h2" sx={{ m: 0, fontSize: "1.25rem", fontWeight: 600, color: "var(--foreground)" }}>
-          {title}
-        </Box>
-      )}
+      <Box sx={{ display: "flex", alignItems: "center", gap: 2, flexWrap: "wrap" }}>
+        {title && (
+          <Box component="h2" sx={{ m: 0, fontSize: "1.25rem", fontWeight: 600, color: "var(--foreground)" }}>
+            {title}
+          </Box>
+        )}
+      </Box>
 
       <TextField
         placeholder={searchPlaceholder}

@@ -12,6 +12,11 @@ export interface Column<T> {
   render?: (value: T[keyof T], row: T) => React.ReactNode;
 }
 
+export interface TableFilterOption {
+  label: string;
+  value: string;
+}
+
 export interface PaginationState {
   page: number;
   rowsPerPage: number;
@@ -33,9 +38,11 @@ export interface DataTableProps<T> {
   searchPlaceholder?: string;
   rowsPerPageOptions?: number[];
   onRowClick?: (row: T) => void;
-  selectable?: boolean;
-  onSelectionChange?: (selectedRows: T[]) => void;
   compact?: boolean;
+  filterField?: keyof T;
+  filterOptions?: TableFilterOption[];
+  defaultFilterValue?: string;
+  filterLabel?: string;
 }
 
 export interface TableToolbarProps {
