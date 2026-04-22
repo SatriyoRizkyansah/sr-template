@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
@@ -27,7 +27,7 @@ interface DashboardLayoutProps {
   title?: string;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
   const [isCollapsed, setIsCollapsed] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("sidebar-collapsed");
@@ -51,7 +51,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
 
   return (
     <SidebarContext.Provider value={{ isCollapsed, setIsCollapsed: updateCollapsed }}>
-      <Box sx={{ display: "flex", minHeight: "100vh", backgroundColor: "var(--muted)" }}>
+      <Box sx={{ display: "flex", height: "100vh", overflow: "hidden", backgroundColor: "var(--muted)" }}>
         <Sidebar />
         <Box
           component="main"
@@ -59,7 +59,8 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
             flexGrow: 1,
             width: isMobile ? "100%" : `calc(100% - ${currentWidth}px)`,
             ml: isMobile ? 0 : `${currentWidth}px`,
-            minHeight: "100vh",
+            height: "100vh",
+            overflow: "hidden",
             transition: "margin 0.3s ease, width 0.3s ease",
             backgroundColor: "var(--muted)",
           }}
@@ -68,22 +69,68 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
           <Box
             sx={{
               mt: "56px",
-              minHeight: "calc(100vh - 56px)",
-              overflow: "auto",
+              height: "calc(100vh - 56px)",
+              overflow: "hidden",
               p: { xs: 0, sm: 2 },
             }}
           >
             <Box
               sx={{
-                minHeight: { xs: "calc(100vh - 56px)", sm: "calc(100vh - 72px)" },
+                height: "100%",
                 backgroundColor: "var(--card)",
                 border: "1px solid var(--border)",
                 borderRadius: { xs: 0, sm: "14px" },
                 boxShadow: "0 1px 2px rgba(16, 24, 40, 0.04)",
                 overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
               }}
             >
-              {children}
+              {title && (
+                <Box
+                  sx={{
+                    px: { xs: 2, sm: 2.5 },
+                    py: 1.5,
+                    borderBottom: "1px solid var(--border)",
+                    backgroundColor: "var(--card)",
+                  }}
+                >
+                  <Typography variant="body1" sx={{ color: "var(--foreground)", fontWeight: 600 }}>
+                    {title}
+                  </Typography>
+                </Box>
+              )}
+
+              <Box
+                sx={{
+                  flex: 1,
+                  overflow: "auto",
+                  overscrollBehavior: "contain",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "var(--border) transparent",
+                  scrollbarGutter: "stable",
+                  "&::-webkit-scrollbar": {
+                    width: "10px",
+                    height: "10px",
+                  },
+                  "&::-webkit-scrollbar-track": {
+                    backgroundColor: "transparent",
+                  },
+                  "&::-webkit-scrollbar-thumb": {
+                    backgroundColor: "var(--border)",
+                    borderRadius: "999px",
+                    border: "3px solid transparent",
+                    backgroundClip: "content-box",
+                    minHeight: "48px",
+                    transition: "background-color 0.2s ease",
+                  },
+                  "&::-webkit-scrollbar-thumb:hover": {
+                    backgroundColor: "var(--muted-foreground)",
+                  },
+                }}
+              >
+                {children}
+              </Box>
             </Box>
           </Box>
         </Box>

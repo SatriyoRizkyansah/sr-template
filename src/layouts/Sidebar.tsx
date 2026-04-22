@@ -4,7 +4,7 @@ import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, Logou
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSidebar } from "./DashboardLayout";
 import SidebarNavItem from "./components/SidebarNavItem";
-import { marketingItems, paymentsItems, systemItems } from "./components/sidebarItems";
+import { sidebarSections, type NavItem } from "./components/sidebarItems";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
@@ -19,7 +19,61 @@ const Sidebar: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const renderNavItem = (item: (typeof marketingItems)[number]) => <SidebarNavItem key={item.title} item={item} active={isActive(item.path)} collapsed={isCollapsed} onNavigate={navigate} />;
+  const renderNavItem = (item: NavItem) => <SidebarNavItem key={item.title} item={item} active={isActive(item.path)} collapsed={isCollapsed} onNavigate={navigate} />;
+
+  const renderSectionHeader = (title: string, abbreviation: string) => (
+    <Box
+      sx={{
+        position: "relative",
+        height: 26,
+        overflow: "hidden",
+        mb: 0.5,
+      }}
+    >
+      <Typography
+        variant="overline"
+        sx={{
+          px: 1.5,
+          py: 0.5,
+          display: "block",
+          color: "var(--muted-foreground)",
+          fontWeight: 700,
+          fontSize: "0.67rem",
+          letterSpacing: "0.12em",
+          position: "absolute",
+          left: 0,
+          opacity: isCollapsed ? 0 : 1,
+          transition: "opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+          pointerEvents: isCollapsed ? "none" : "auto",
+          textTransform: "uppercase",
+        }}
+      >
+        {title}
+      </Typography>
+      <Typography
+        variant="overline"
+        sx={{
+          px: 1.5,
+          py: 0.5,
+          display: "block",
+          color: "var(--muted-foreground)",
+          fontWeight: 700,
+          fontSize: "0.67rem",
+          letterSpacing: "0.12em",
+          textAlign: "center",
+          position: "absolute",
+          left: 0,
+          right: 0,
+          opacity: isCollapsed ? 1 : 0,
+          transition: "opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1)",
+          pointerEvents: isCollapsed ? "auto" : "none",
+          textTransform: "uppercase",
+        }}
+      >
+        {abbreviation}
+      </Typography>
+    </Box>
+  );
 
   const handleLogout = () => {
     navigate("/login");
@@ -44,8 +98,8 @@ const Sidebar: React.FC = () => {
           left: 0,
           top: 0,
           height: "100vh",
-          boxShadow: "none",
-          // borderRight: "1px solid var(--border)",
+          boxShadow: "0 1px 3px rgba(15, 23, 42, 0.04)",
+          borderRight: "1px solid var(--border)",
           transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           overflow: "visible",
         },
@@ -54,35 +108,37 @@ const Sidebar: React.FC = () => {
       {/* Logo Section */}
       <Box
         sx={{
-          px: 2,
+          px: 1.5,
           minHeight: 56,
-          // borderBottom: "1px solid var(--border)",
+          borderBottom: "1px solid var(--border)",
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
           position: "relative",
+          backgroundColor: "var(--muted)",
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
             sx={{
-              width: 40,
-              height: 40,
-              backgroundColor: "var(--primary)",
-              borderRadius: 2,
+              width: 36,
+              height: 36,
+              backgroundColor: "var(--card)",
+              border: "1px solid var(--border)",
+              borderRadius: "10px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "white",
-              fontWeight: 700,
-              fontSize: "1.125rem",
+              color: "var(--primary)",
+              fontWeight: 800,
+              fontSize: "0.9rem",
             }}
           >
-            F
+            SJ
           </Box>
           {!isCollapsed && (
-            <Typography variant="h6" fontWeight={600} sx={{ color: "var(--foreground)" }}>
-              Test
+            <Typography variant="body1" fontWeight={700} sx={{ color: "var(--foreground)", letterSpacing: "-0.01em" }}>
+              Sasmita HRMS
             </Typography>
           )}
         </Box>
@@ -92,14 +148,18 @@ const Sidebar: React.FC = () => {
             onClick={() => setIsCollapsed(!isCollapsed)}
             sx={{
               color: "var(--foreground)",
-              padding: 1,
-              borderRadius: "6px",
+              width: 30,
+              height: 30,
+              borderRadius: "8px",
+              border: "1px solid var(--border)",
+              backgroundColor: "var(--card)",
               "&:hover": {
                 backgroundColor: "var(--accent)",
+                borderColor: "var(--primary)",
               },
             }}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon sx={{ fontSize: 18 }} />
           </IconButton>
         )}
 
@@ -108,30 +168,31 @@ const Sidebar: React.FC = () => {
             onClick={() => setIsCollapsed(!isCollapsed)}
             sx={{
               position: "absolute",
-              right: "-22px",
+              right: "-16px",
               top: "50%",
               transform: "translateY(-50%)",
-              color: "white",
-              backgroundColor: "rgb(36, 42, 43)",
-              width: 28,
-              height: 28,
+              color: "var(--foreground)",
+              backgroundColor: "var(--card)",
+              border: "1px solid var(--border)",
+              width: 30,
+              height: 30,
               padding: 0,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+              boxShadow: "0 2px 8px rgba(15, 23, 42, 0.1)",
               transition: "all 0.3s ease",
               zIndex: 1300,
-              borderRadius: "4px",
-              fontSize: "0.875rem",
+              borderRadius: "8px",
               "&:hover": {
-                backgroundColor: "rgb(68, 68, 68)",
+                borderColor: "var(--primary)",
+                backgroundColor: "var(--accent)",
                 transform: "translateY(-50%) scale(1.1)",
-                boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                boxShadow: "0 6px 14px rgba(15, 23, 42, 0.14)",
               },
             }}
           >
-            <ChevronRightIcon sx={{ fontSize: "18px" }} />
+            <ChevronRightIcon sx={{ fontSize: 18 }} />
           </IconButton>
         )}
       </Box>
@@ -140,8 +201,7 @@ const Sidebar: React.FC = () => {
         sx={{
           flex: 1,
           overflow: "auto",
-          p: 1.5,
-          // Custom scrollbar styling
+          p: 1.25,
           scrollbarWidth: "thin",
           scrollbarColor: "var(--border) transparent",
           "&::-webkit-scrollbar": {
@@ -159,163 +219,20 @@ const Sidebar: React.FC = () => {
           },
         }}
       >
-        {/* Marketing Section */}
-        <Box
-          sx={{
-            position: "relative",
-            height: "32px",
-            overflow: "hidden",
-          }}
-        >
-          <Typography
-            variant="overline"
-            sx={{
-              px: 2,
-              py: 1,
-              display: "block",
-              color: "var(--muted-foreground)",
-              fontWeight: 600,
-              fontSize: "0.75rem",
-              letterSpacing: "0.1em",
-              position: "absolute",
-              left: 0,
-              opacity: isCollapsed ? 0 : 1,
-              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              pointerEvents: isCollapsed ? "none" : "auto",
-            }}
-          >
-            Marketing
-          </Typography>
-          <Typography
-            variant="overline"
-            sx={{
-              px: 2,
-              py: 1,
-              display: "block",
-              color: "var(--muted-foreground)",
-              fontWeight: 600,
-              fontSize: "0.75rem",
-              letterSpacing: "0.1em",
-              textAlign: "center",
-              position: "absolute",
-              left: 0,
-              right: 0,
-              opacity: isCollapsed ? 1 : 0,
-              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              pointerEvents: isCollapsed ? "auto" : "none",
-            }}
-          >
-            M
-          </Typography>
-        </Box>
-        <List sx={{ p: 0, mb: 2 }}>{marketingItems.map(renderNavItem)}</List>
-
-        {/* Payments Section */}
-        <Box
-          sx={{
-            position: "relative",
-            height: "30px",
-            overflow: "hidden",
-          }}
-        >
-          <Typography
-            variant="overline"
-            sx={{
-              px: 2,
-              py: 0.75,
-              display: "block",
-              color: "var(--muted-foreground)",
-              fontWeight: 600,
-              fontSize: "0.7rem",
-              letterSpacing: "0.1em",
-              position: "absolute",
-              left: 0,
-              opacity: isCollapsed ? 0 : 1,
-              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              pointerEvents: isCollapsed ? "none" : "auto",
-            }}
-          >
-            Payments
-          </Typography>
-          <Typography
-            variant="overline"
-            sx={{
-              px: 2,
-              py: 0.75,
-              display: "block",
-              color: "var(--muted-foreground)",
-              fontWeight: 600,
-              fontSize: "0.7rem",
-              letterSpacing: "0.1em",
-              textAlign: "center",
-              position: "absolute",
-              left: 0,
-              right: 0,
-              opacity: isCollapsed ? 1 : 0,
-              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              pointerEvents: isCollapsed ? "auto" : "none",
-            }}
-          >
-            P
-          </Typography>
-        </Box>
-        <List sx={{ p: 0, mb: 2 }}>{paymentsItems.map(renderNavItem)}</List>
-
-        {/* System Section */}
-        <Box
-          sx={{
-            position: "relative",
-            height: "30px",
-            overflow: "hidden",
-          }}
-        >
-          <Typography
-            variant="overline"
-            sx={{
-              px: 2,
-              py: 0.75,
-              display: "block",
-              color: "var(--muted-foreground)",
-              fontWeight: 600,
-              fontSize: "0.7rem",
-              letterSpacing: "0.1em",
-              position: "absolute",
-              left: 0,
-              opacity: isCollapsed ? 0 : 1,
-              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              pointerEvents: isCollapsed ? "none" : "auto",
-            }}
-          >
-            System
-          </Typography>
-          <Typography
-            variant="overline"
-            sx={{
-              px: 2,
-              py: 0.75,
-              display: "block",
-              color: "var(--muted-foreground)",
-              fontWeight: 600,
-              fontSize: "0.7rem",
-              letterSpacing: "0.1em",
-              textAlign: "center",
-              position: "absolute",
-              left: 0,
-              right: 0,
-              opacity: isCollapsed ? 1 : 0,
-              transition: "opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              pointerEvents: isCollapsed ? "auto" : "none",
-            }}
-          >
-            S
-          </Typography>
-        </Box>
-        <List sx={{ p: 0 }}>{systemItems.map(renderNavItem)}</List>
+        {sidebarSections.map((section, index) => (
+          <Box key={section.key} sx={{ mb: index === sidebarSections.length - 1 ? 0 : 1.5 }}>
+            {renderSectionHeader(section.title, section.abbreviation)}
+            <List sx={{ p: 0 }}>{section.items.map(renderNavItem)}</List>
+          </Box>
+        ))}
       </Box>
       {/* User Profile Section */}
       <Box
         sx={{
-          p: 1.5,
+          p: 1.25,
+          pt: 1,
+          borderTop: "1px solid var(--border)",
+          backgroundColor: "var(--muted)",
         }}
       >
         <Box
@@ -323,14 +240,16 @@ const Sidebar: React.FC = () => {
             display: "flex",
             alignItems: "center",
             gap: 1.5,
-            p: 1.5,
-            borderRadius: 1.5,
+            p: 1.25,
+            borderRadius: "10px",
             border: "1px solid var(--border)",
+            backgroundColor: "var(--card)",
             cursor: "pointer",
             transition: "all 0.2s ease",
             justifyContent: isCollapsed ? "center" : "flex-start",
             "&:hover": {
-              backgroundColor: "var(--card)",
+              borderColor: "var(--primary)",
+              boxShadow: "0 2px 8px rgba(15, 23, 42, 0.08)",
             },
           }}
         >
@@ -338,10 +257,10 @@ const Sidebar: React.FC = () => {
             sx={{
               width: 36,
               height: 36,
-              backgroundColor: "var(--primary)",
+              backgroundColor: "var(--accent)",
               fontSize: "0.875rem",
               fontWeight: 700,
-              color: "white",
+              color: "var(--foreground)",
             }}
           >
             HN
@@ -361,9 +280,9 @@ const Sidebar: React.FC = () => {
           onClick={handleLogout}
           sx={{
             mt: 1,
-            borderRadius: 1.5,
-            border: "1px solid transparent",
-            color: "var(--destructive)",
+            borderRadius: "10px",
+            border: "1px solid var(--border)",
+            color: "var(--muted-foreground)",
             px: isCollapsed ? 1 : 1.5,
             py: 1,
             gap: 1,
@@ -371,6 +290,7 @@ const Sidebar: React.FC = () => {
             "&:hover": {
               borderColor: "var(--destructive)",
               backgroundColor: "rgba(220, 38, 38, 0.08)",
+              color: "var(--destructive)",
             },
           }}
         >

@@ -17,19 +17,19 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ item, active, collapsed
       key={item.title}
       onClick={() => onNavigate(item.path)}
       sx={{
-        borderRadius: 1.5,
+        borderRadius: "10px",
         mb: 0.5,
         py: 1,
-        px: collapsed ? 1 : 1.5,
+        px: collapsed ? 1 : 1.25,
         transition: "all 0.2s ease",
         backgroundColor: active ? "var(--card)" : "transparent",
         border: active ? "1px solid var(--border)" : "1px solid transparent",
         color: active ? "var(--foreground)" : "var(--muted-foreground)",
         justifyContent: collapsed ? "center" : "flex-start",
-        boxShadow: active ? "0 2px 8px rgba(15, 23, 42, 0.08)" : "none",
+        boxShadow: active ? "0 2px 6px rgba(15, 23, 42, 0.06)" : "none",
         "&:hover": {
           backgroundColor: "var(--card)",
-          borderColor: "var(--border)",
+          borderColor: active ? "var(--border)" : "rgba(148, 163, 184, 0.35)",
           color: "var(--foreground)",
         },
       }}
@@ -52,6 +52,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ item, active, collapsed
             variant="body2"
             sx={{
               fontWeight: active ? 600 : 500,
+              fontSize: "0.86rem",
               color: "inherit",
               transition: "color 0.2s ease",
             }}
@@ -69,7 +70,7 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ item, active, collapsed
                 fontSize: "0.7rem",
                 fontWeight: 600,
                 textAlign: "center",
-                backgroundColor: active ? "rgba(2, 132, 199, 0.15)" : "var(--muted)",
+                backgroundColor: active ? "rgba(239, 68, 68, 0.12)" : "var(--muted)",
                 color: active ? "var(--primary)" : "var(--muted-foreground)",
               }}
             >
