@@ -68,7 +68,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
           <Navbar />
           <Box
             sx={{
-              mt: "56px",
+              mt: "40px",
               height: "calc(100vh - 56px)",
               overflow: "hidden",
               p: { xs: 0, sm: 2 },

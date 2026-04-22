@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, Avatar, Menu, MenuItem, useMediaQuery, useTheme as useMuiTheme } from "@mui/material";
 import { Search as SearchIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon } from "@mui/icons-material";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useSidebar } from "./DashboardLayout";
 import { useTheme } from "../theme/useTheme";
 import CommandPalette from "../components/CommandPalette";
@@ -11,7 +12,7 @@ const drawerWidthCollapsed = 80;
 const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const { isCollapsed } = useSidebar();
+  const { isCollapsed, setIsCollapsed } = useSidebar();
   const { mode, toggleColorMode } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery("(max-width:767px)");
@@ -53,7 +54,28 @@ const Navbar: React.FC = () => {
           gap: { xs: 1, sm: 2 },
         }}
       >
-        <Box />
+        <Box sx={{ justifySelf: "start" }}>
+          {isMobile ? (
+            <IconButton
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              sx={{
+                color: "var(--foreground)",
+                backgroundColor: "var(--muted)",
+                border: "1px solid var(--border)",
+                width: 32,
+                height: 32,
+                borderRadius: "var(--radius)",
+                transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+                "&:hover": {
+                  backgroundColor: "var(--accent)",
+                  borderColor: "var(--primary)",
+                },
+              }}
+            >
+              <MenuOutlinedIcon fontSize="small" />
+            </IconButton>
+          ) : null}
+        </Box>
         <Box
           onClick={() => setCommandPaletteOpen(true)}
           sx={{
@@ -62,7 +84,7 @@ const Navbar: React.FC = () => {
             backgroundColor: "var(--card)",
             borderRadius: "999px",
             px: 2,
-            py: 0.35,
+            py: 0.15,
             width: "100%",
             maxWidth: 520,
             border: `1px solid ${muiTheme.palette.divider}`,
