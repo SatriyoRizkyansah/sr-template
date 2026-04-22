@@ -118,7 +118,7 @@ const Sidebar: React.FC = () => {
           backgroundColor: "var(--muted)",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, minWidth: 0, flex: 1 }}>
           <Box
             sx={{
               width: 36,
@@ -136,11 +136,31 @@ const Sidebar: React.FC = () => {
           >
             SJ
           </Box>
-          {!isCollapsed && (
-            <Typography variant="body1" fontWeight={700} sx={{ color: "var(--foreground)", letterSpacing: "-0.01em" }}>
-              Sasmita HRMS
-            </Typography>
-          )}
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: isCollapsed ? "0fr" : "1fr",
+              transition: "grid-template-columns 0.24s cubic-bezier(0.4, 0, 0.2, 1)",
+              minWidth: 0,
+            }}
+          >
+            <Box sx={{ overflow: "hidden" }}>
+              <Typography
+                variant="body1"
+                fontWeight={700}
+                sx={{
+                  color: "var(--foreground)",
+                  letterSpacing: "-0.01em",
+                  whiteSpace: "nowrap",
+                  opacity: isCollapsed ? 0 : 1,
+                  transform: isCollapsed ? "translateX(-8px)" : "translateX(0)",
+                  transition: "opacity 0.18s ease, transform 0.24s cubic-bezier(0.4, 0, 0.2, 1)",
+                }}
+              >
+                Sasmita HRMS
+              </Typography>
+            </Box>
+          </Box>
         </Box>
 
         {!isCollapsed && (
@@ -265,16 +285,32 @@ const Sidebar: React.FC = () => {
           >
             HN
           </Avatar>
-          {!isCollapsed && (
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="body2" fontWeight={600} sx={{ color: "var(--foreground)" }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: isCollapsed ? "0fr" : "1fr",
+              transition: "grid-template-columns 0.24s cubic-bezier(0.4, 0, 0.2, 1)",
+              flex: 1,
+              minWidth: 0,
+            }}
+          >
+            <Box
+              sx={{
+                overflow: "hidden",
+                minWidth: 0,
+                opacity: isCollapsed ? 0 : 1,
+                transform: isCollapsed ? "translateX(-8px)" : "translateX(0)",
+                transition: "opacity 0.18s ease, transform 0.24s cubic-bezier(0.4, 0, 0.2, 1)",
+              }}
+            >
+              <Typography variant="body2" fontWeight={600} sx={{ color: "var(--foreground)", whiteSpace: "nowrap" }}>
                 Harper Nelson
               </Typography>
-              <Typography variant="caption" sx={{ color: "var(--muted-foreground)" }}>
+              <Typography variant="caption" sx={{ color: "var(--muted-foreground)", whiteSpace: "nowrap" }}>
                 Admin Manager
               </Typography>
             </Box>
-          )}
+          </Box>
         </Box>
         <ListItemButton
           onClick={handleLogout}

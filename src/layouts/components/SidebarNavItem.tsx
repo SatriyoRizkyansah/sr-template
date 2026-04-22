@@ -18,14 +18,14 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ item, active, collapsed
       onClick={() => onNavigate(item.path)}
       sx={{
         borderRadius: "10px",
-        mb: 0.5,
-        py: 1,
-        px: collapsed ? 1 : 1.25,
-        transition: "all 0.2s ease",
+        // mb: 0.5,
+        // py: 1,
+        // px: 1.25,
+        transition: "background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease",
         backgroundColor: active ? "var(--card)" : "transparent",
         border: active ? "1px solid var(--border)" : "1px solid transparent",
         color: active ? "var(--foreground)" : "var(--muted-foreground)",
-        justifyContent: collapsed ? "center" : "flex-start",
+        justifyContent: "flex-start",
         boxShadow: active ? "0 2px 6px rgba(15, 23, 42, 0.06)" : "none",
         "&:hover": {
           backgroundColor: "var(--card)",
@@ -36,49 +36,72 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ item, active, collapsed
     >
       <ListItemIcon
         sx={{
-          minWidth: collapsed ? "auto" : 36,
+          minWidth: 30,
           color: "inherit",
           justifyContent: "flex-start",
           flex: "0 0 auto",
-          mr: collapsed ? 0 : 1,
+          // mr: 1,
+          transition: "margin-right 0.22s cubic-bezier(0.4, 0, 0.2, 1)",
         }}
       >
         {item.icon}
       </ListItemIcon>
 
-      {!collapsed && (
-        <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", gap: 1 }}>
-          <Typography
-            variant="body2"
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: collapsed ? "0fr" : "1fr",
+          flex: 1,
+          transition: "grid-template-columns 0.22s cubic-bezier(0.4, 0, 0.2, 1)",
+        }}
+      >
+        <Box sx={{ overflow: "hidden", minWidth: 0 }}>
+          <Box
             sx={{
-              fontWeight: active ? 600 : 500,
-              fontSize: "0.86rem",
-              color: "inherit",
-              transition: "color 0.2s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+              gap: 1,
+              opacity: collapsed ? 0 : 1,
+              transform: collapsed ? "translateX(-8px)" : "translateX(0)",
+              transition: "opacity 0.18s ease, transform 0.22s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            {item.title}
-          </Typography>
-          {showBadge && (
-            <Box
-              component="span"
+            <Typography
+              variant="body2"
               sx={{
-                minWidth: 24,
-                px: 0.75,
-                py: 0.25,
-                borderRadius: 9999,
-                fontSize: "0.7rem",
-                fontWeight: 600,
-                textAlign: "center",
-                backgroundColor: active ? "rgba(239, 68, 68, 0.12)" : "var(--muted)",
-                color: active ? "var(--primary)" : "var(--muted-foreground)",
+                fontWeight: active ? 600 : 500,
+                fontSize: "0.86rem",
+                color: "inherit",
+                whiteSpace: "nowrap",
+                transition: "color 0.2s ease",
               }}
             >
-              {item.badge}
-            </Box>
-          )}
+              {item.title}
+            </Typography>
+            {showBadge && (
+              <Box
+                component="span"
+                sx={{
+                  minWidth: 24,
+                  px: 0.75,
+                  py: 0.25,
+                  borderRadius: 9999,
+                  fontSize: "0.7rem",
+                  fontWeight: 600,
+                  textAlign: "center",
+                  backgroundColor: active ? "rgba(239, 68, 68, 0.12)" : "var(--muted)",
+                  color: active ? "var(--primary)" : "var(--muted-foreground)",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {item.badge}
+              </Box>
+            )}
+          </Box>
         </Box>
-      )}
+      </Box>
     </ListItemButton>
   );
 };
