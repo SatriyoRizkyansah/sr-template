@@ -58,21 +58,18 @@ const Sidebar: React.FC = () => {
             sx={{
               width: 40,
               height: 40,
-              backgroundColor: "var(--primary)",
               borderRadius: 2,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              color: "white",
-              fontWeight: 700,
-              fontSize: "1.125rem",
+              overflow: "hidden",
             }}
           >
-            F
+            <img src="/images/yayasan.png" alt="Yayasan Sasmita Jaya" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
           </Box>
           {!isCollapsed && (
             <Typography variant="h6" fontWeight={600} sx={{ color: "var(--foreground)" }}>
-              Test
+              HRMS
             </Typography>
           )}
         </Box>

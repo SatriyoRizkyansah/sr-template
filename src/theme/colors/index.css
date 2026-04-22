@@ -1,79 +1,82 @@
 :root {
   --background: #f7f9fc;
-  --foreground: #09090b;
+  --foreground: #0a0909;
 
   --card: #ffffff;
-  --card-foreground: #09090b;
+  --card-foreground: #0a0909;
 
-  --primary: #ef4444;
+  /* BRAND */
+  --primary: #0095e6;
   --primary-foreground: #ffffff;
 
-  --secondary: #f4f4f5;
-  --secondary-foreground: #18181b;
+  /* SECONDARY (soft gray UI) */
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0a0909;
 
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-
-  --accent: #f4f4f5;
-  --accent-foreground: #18181b;
-
-  --destructive: #ef4444;
-
-  --success: #16a34a;
+  /* SUCCESS */
+  --success: #4cad50;
   --success-foreground: #ffffff;
 
+  /* DANGER */
   --danger: #dc2626;
   --danger-foreground: #ffffff;
 
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #ef4444;
+  /* MUTED TEXT */
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
 
-  --radius-xs: 0.375rem;
-  --radius-sm: 0.5rem;
+  /* ACCENT (hover / subtle highlight) */
+  --accent: #e0f2fe;
+  --accent-foreground: #0369a1;
+
+  /* BORDER */
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+
+  /* RING (focus) */
+  --ring: #0095e6;
+
+  /* SIDEBAR (important untuk HRMS) */
+  --sidebar: #0a0909;
+  --sidebar-foreground: #ffffff;
+  --sidebar-active: #0095e6;
+
   --radius: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-full: 999px;
 }
 
 .dark {
-  --background: #09090b;
-  --foreground: #fafafa;
+  --background: #0a0909;
+  --foreground: #f8fafc;
 
-  --card: #09090b;
-  --card-foreground: #fafafa;
+  --card: #111111;
+  --card-foreground: #f8fafc;
 
-  --primary: #f87171;
-  --primary-foreground: #18181b;
+  --primary: #38bdf8;
+  --primary-foreground: #0a0909;
 
-  --secondary: #27272a;
-  --secondary-foreground: #fafafa;
-
-  --muted: #27272a;
-  --muted-foreground: #a1a1aa;
-
-  --accent: #27272a;
-  --accent-foreground: #fafafa;
-
-  --destructive: #f87171;
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
 
   --success: #4ade80;
   --success-foreground: #052e16;
 
   --danger: #f87171;
-  --danger-foreground: #18181b;
+  --danger-foreground: #0a0909;
 
-  --border: #27272a;
-  --input: #27272a;
-  --ring: #f87171;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
 
-  --radius-xs: 0.375rem;
-  --radius-sm: 0.5rem;
-  --radius: 0.75rem;
-  --radius-lg: 1rem;
-  --radius-xl: 1.5rem;
-  --radius-full: 999px;
+  --accent: #082f49;
+  --accent-foreground: #38bdf8;
+
+  --border: #1e293b;
+  --input: #1e293b;
+
+  --ring: #38bdf8;
+
+  --sidebar: #000000;
+  --sidebar-foreground: #e5e7eb;
+  --sidebar-active: #0095e6;
 }
 
 /* Theme transition support */
