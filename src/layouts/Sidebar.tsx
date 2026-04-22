@@ -45,14 +45,24 @@ const Sidebar: React.FC = () => {
           top: 0,
           height: "100vh",
           boxShadow: "none",
-          borderRight: "none",
+          // borderRight: "1px solid var(--border)",
           transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
           overflow: "visible",
         },
       }}
     >
       {/* Logo Section */}
-      <Box sx={{ p: 2, pb: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", position: "relative" }}>
+      <Box
+        sx={{
+          px: 2,
+          minHeight: 56,
+          // borderBottom: "1px solid var(--border)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          position: "relative",
+        }}
+      >
         <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
             sx={{

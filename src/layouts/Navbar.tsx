@@ -4,19 +4,14 @@ import { Search as SearchIcon, DarkMode as DarkModeIcon, LightMode as LightModeI
 import { useSidebar } from "./DashboardLayout";
 import { useTheme } from "../theme/useTheme";
 import CommandPalette from "../components/CommandPalette";
-import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
 
-interface NavbarProps {
-  title?: string;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
+const Navbar: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-  const { isCollapsed, setIsCollapsed } = useSidebar();
+  const { isCollapsed } = useSidebar();
   const { mode, toggleColorMode } = useTheme();
   const muiTheme = useMuiTheme();
   const isMobile = useMediaQuery("(max-width:767px)");
@@ -39,109 +34,83 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
       sx={{
         width: isMobile ? "100%" : `calc(100% - ${currentWidth}px)`,
         ml: isMobile ? 0 : `${currentWidth}px`,
-        backgroundColor: "var(--background)",
+        backgroundColor: "var(--muted)",
         backgroundImage: "none",
         color: "var(--foreground)",
         top: 0,
         transition: "margin 0.3s ease, width 0.3s ease",
-        borderBottom: "1px solid var(--border)",
+        // borderBottom: "1px solid var(--border)",
+        height: 56,
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between", minHeight: "64px !important", px: 3, pl: isCollapsed ? { xs: 3, sm: 5 } : 3 }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          {isMobile && (
-            <IconButton
-              onClick={() => setIsCollapsed(!isCollapsed)}
-              sx={{
-                color: "var(--foreground)",
-                backgroundColor: "var(--muted)",
-                border: "1px solid var(--border)",
-                width: 36,
-                height: 36,
-                borderRadius: "var(--radius)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-                mr: 1,
-                "&:hover": {
-                  backgroundColor: "var(--accent)",
-                  borderColor: "var(--primary)",
-                },
-              }}
-            >
-              <MenuOutlinedIcon fontSize="small" />
-            </IconButton>
-          )}
-          <Typography
-            variant="h5"
-            fontWeight={700}
+      <Toolbar
+        sx={{
+          minHeight: "56px !important",
+          px: { xs: 2, sm: 3 },
+          display: "grid",
+          gridTemplateColumns: "1fr auto 1fr",
+          alignItems: "center",
+          gap: { xs: 1, sm: 2 },
+        }}
+      >
+        <Box />
+        <Box
+          onClick={() => setCommandPaletteOpen(true)}
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: "var(--card)",
+            borderRadius: "999px",
+            px: 2,
+            py: 0.35,
+            width: "100%",
+            maxWidth: 520,
+            border: `1px solid ${muiTheme.palette.divider}`,
+            transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+            cursor: "pointer",
+            gap: 1,
+            justifySelf: "center",
+            "&:hover": {
+              borderColor: muiTheme.palette.primary.main,
+              backgroundColor: muiTheme.palette.action.selected,
+            },
+          }}
+        >
+          <SearchIcon sx={{ color: muiTheme.palette.text.secondary, fontSize: "14px" }} />
+          <InputBase
+            placeholder="Search... (Cmd+K)"
             sx={{
-              color: "var(--foreground)",
-              fontSize: "1.5rem",
-              letterSpacing: "-0.025em",
+              flex: 1,
+              color: muiTheme.palette.text.primary,
+              fontSize: "0.8rem",
+              pointerEvents: "none",
+              "& input::placeholder": {
+                color: muiTheme.palette.text.secondary,
+                opacity: 1,
+              },
+            }}
+            readOnly
+          />
+          <Typography
+            sx={{
+              fontSize: "0.7rem",
+              color: muiTheme.palette.text.secondary,
+              fontWeight: 500,
             }}
           >
-            {title}
+            ⌘K
           </Typography>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Box
-            onClick={() => setCommandPaletteOpen(true)}
-            sx={{
-              display: { xs: "none", sm: "flex" },
-              alignItems: "center",
-              backgroundColor: muiTheme.palette.action.hover,
-              borderRadius: muiTheme.shape.borderRadius,
-              px: 2,
-              py: 0.45,
-              mr: 0,
-              minWidth: 220,
-              border: `1px solid ${muiTheme.palette.divider}`,
-              transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-              cursor: "pointer",
-              gap: 1,
-              "&:hover": {
-                borderColor: muiTheme.palette.primary.main,
-                backgroundColor: muiTheme.palette.action.selected,
-              },
-            }}
-          >
-            <SearchIcon sx={{ color: muiTheme.palette.text.secondary, fontSize: "14px" }} />
-            <InputBase
-              placeholder="Search... (Cmd+K)"
-              sx={{
-                flex: 1,
-                color: muiTheme.palette.text.primary,
-                fontSize: "0.65rem",
-                pointerEvents: "none",
-                "& input::placeholder": {
-                  color: muiTheme.palette.text.secondary,
-                  opacity: 1,
-                },
-              }}
-              readOnly
-            />
-            <Typography
-              sx={{
-                fontSize: "0.7rem",
-                color: muiTheme.palette.text.secondary,
-                fontWeight: 500,
-              }}
-            >
-              ⌘K
-            </Typography>
-          </Box>
-
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, justifySelf: "end" }}>
           <IconButton
             onClick={toggleColorMode}
             sx={{
               color: "var(--foreground)",
               backgroundColor: "var(--muted)",
               border: "1px solid var(--border)",
-              width: 30,
-              height: 30,
+              width: 32,
+              height: 32,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",

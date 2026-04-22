@@ -27,7 +27,7 @@ interface DashboardLayoutProps {
   title?: string;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
+const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   const [isCollapsed, setIsCollapsed] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("sidebar-collapsed");
@@ -51,7 +51,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
 
   return (
     <SidebarContext.Provider value={{ isCollapsed, setIsCollapsed: updateCollapsed }}>
-      <Box sx={{ display: "flex", minHeight: "100vh", backgroundColor: "var(--background)" }}>
+      <Box sx={{ display: "flex", minHeight: "100vh", backgroundColor: "var(--muted)" }}>
         <Sidebar />
         <Box
           component="main"
@@ -61,17 +61,30 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
             ml: isMobile ? 0 : `${currentWidth}px`,
             minHeight: "100vh",
             transition: "margin 0.3s ease, width 0.3s ease",
+            backgroundColor: "var(--muted)",
           }}
         >
-          <Navbar title={title} />
+          <Navbar />
           <Box
             sx={{
-              mt: "64px",
-              minHeight: "calc(100vh - 64px)",
+              mt: "56px",
+              minHeight: "calc(100vh - 56px)",
               overflow: "auto",
+              p: { xs: 0, sm: 2 },
             }}
           >
-            {children}
+            <Box
+              sx={{
+                minHeight: { xs: "calc(100vh - 56px)", sm: "calc(100vh - 72px)" },
+                backgroundColor: "var(--card)",
+                border: "1px solid var(--border)",
+                borderRadius: { xs: 0, sm: "14px" },
+                boxShadow: "0 1px 2px rgba(16, 24, 40, 0.04)",
+                overflow: "hidden",
+              }}
+            >
+              {children}
+            </Box>
           </Box>
         </Box>
       </Box>
