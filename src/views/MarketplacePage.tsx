@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from "react";
 import DashboardLayout from "../layouts/DashboardLayout";
-import { Typography, Box, Chip, Button, Stack, TextField, MenuItem, InputAdornment } from "@mui/material";
+import { Typography, Box, Chip, Stack, TextField, MenuItem, InputAdornment } from "@mui/material";
 import { DataTable, type Column } from "../components/table";
 import Modal, { type ModalSection } from "../components/modal";
+import SoftButton from "../components/common/SoftButton";
 
 // Product data type
 interface Product {
@@ -259,9 +260,7 @@ const MarketplacePage: React.FC = () => {
             </Typography>
           </Box>
 
-          <Button variant="contained" onClick={() => setIsModalOpen(true)} sx={{ borderRadius: "var(--radius)", textTransform: "none", fontWeight: 600 }}>
-            Add product
-          </Button>
+          <SoftButton onClick={() => setIsModalOpen(true)}>Add product</SoftButton>
         </Box>
 
         {/* DataTable Implementation */}

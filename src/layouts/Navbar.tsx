@@ -164,6 +164,7 @@ const Navbar: React.FC<NavbarProps> = ({ title = "Dashboard" }) => {
               backgroundColor: muiTheme.palette.primary.main,
               fontSize: "0.875rem",
               fontWeight: 600,
+              color: "var(--primary-foreground)",
               cursor: "pointer",
               border: `2px solid ${muiTheme.palette.divider}`,
               transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
