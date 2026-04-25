@@ -2,12 +2,12 @@ import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Loader } from "../components";
 
-const LoginPage = lazy(() => import("../views/LoginPage"));
-const DashboardPage = lazy(() => import("../views/DashboardPage"));
-const MarketplacePage = lazy(() => import("../views/MarketplacePage"));
-const OrdersPage = lazy(() => import("../views/OrdersPage"));
-const SettingsPage = lazy(() => import("../views/SettingsPage"));
-const NotFoundPage = lazy(() => import("../views/NotFoundPage"));
+const LoginPage = lazy(() => import("../pages/auth/LoginPage"));
+const DashboardPage = lazy(() => import("../pages/DashboardPage"));
+const MarketplacePage = lazy(() => import("../pages/MarketplacePage"));
+const OrdersPage = lazy(() => import("../pages/OrdersPage"));
+const SettingsPage = lazy(() => import("../pages/SettingsPage"));
+const NotFoundPage = lazy(() => import("../pages/NotFoundPage"));
 
 export function AppRoutes() {
   return (
