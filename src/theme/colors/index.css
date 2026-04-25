@@ -5,7 +5,7 @@
   --card: #ffffff;
   --card-foreground: #09090b;
 
-  --primary: #ef4444;
+  --primary: #3b82f6;
   --primary-foreground: #ffffff;
 
   --secondary: #f4f4f5;
@@ -17,7 +17,7 @@
   --accent: #f4f4f5;
   --accent-foreground: #18181b;
 
-  --destructive: #ef4444;
+  --destructive: #3b82f6;
 
   --success: #16a34a;
   --success-foreground: #ffffff;
@@ -27,7 +27,7 @@
 
   --border: #e4e4e7;
   --input: #e4e4e7;
-  --ring: #ef4444;
+  --ring: #3b82f6;
 
   --radius-xs: 0.375rem;
   --radius-sm: 0.5rem;

@@ -11,7 +11,7 @@ export function LoginVisualSection({ imageSrc }: LoginVisualSectionProps) {
         position: "relative",
         display: { xs: "none", md: "block" },
         p: 2,
-        backgroundColor: "#ececec",
+        backgroundColor: "var(--card)",
       }}
     >
       <Box
@@ -39,7 +39,7 @@ export function LoginVisualSection({ imageSrc }: LoginVisualSectionProps) {
           sx={{
             position: "absolute",
             inset: 0,
-            background: "linear-gradient(180deg, rgba(10, 16, 35, 0.06) 10%, rgba(10, 16, 35, 0.28) 100%)",
+            background: "linear-gradient(180deg, color-mix(in srgb, var(--foreground) 6%, transparent) 10%, color-mix(in srgb, var(--foreground) 28%, transparent) 100%)",
           }}
         />
       </Box>

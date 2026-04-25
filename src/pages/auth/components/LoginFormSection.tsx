@@ -1,4 +1,4 @@
-import { Box, TextField, Button, Typography, IconButton, InputAdornment, Stack, FormControlLabel, Checkbox, Link } from "@mui/material";
+import { Box, TextField, Button, Typography, IconButton, InputAdornment, Stack } from "@mui/material";
 import { Visibility, VisibilityOff, LoginOutlined } from "@mui/icons-material";
 import type { FormEvent } from "react";
 
@@ -9,58 +9,56 @@ interface LoginFormData {
 
 interface LoginFormSectionProps {
   formData: LoginFormData;
-  rememberMe: boolean;
   showPassword: boolean;
   isLoading: boolean;
   onUsernameChange: (value: string) => void;
   onPasswordChange: (value: string) => void;
-  onRememberMeChange: (checked: boolean) => void;
   onTogglePassword: () => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
 const textFieldSx = {
   "& .MuiInputLabel-root": {
-    color: "#5c6575",
+    color: "var(--muted-foreground)",
     fontWeight: 500,
   },
   "& .MuiInputLabel-root.Mui-focused": {
-    color: "#ea3500",
+    color: "var(--primary)",
   },
   "& .MuiInputLabel-root.Mui-disabled": {
-    color: "rgba(92, 101, 117, 0.7)",
+    color: "color-mix(in srgb, var(--muted-foreground) 70%, transparent)",
   },
   "& .MuiOutlinedInput-root": {
     borderRadius: "10px",
-    backgroundColor: "rgba(255, 255, 255, 0.72)",
+    backgroundColor: "color-mix(in srgb, var(--background) 72%, transparent)",
     "& fieldset": {
-      borderColor: "rgba(23, 27, 36, 0.14)",
+      borderColor: "var(--border)",
     },
     "&:hover fieldset": {
-      borderColor: "rgba(23, 27, 36, 0.35)",
+      borderColor: "var(--muted-foreground)",
     },
     "&.Mui-focused fieldset": {
-      borderColor: "#ea3500",
-      boxShadow: "0 0 0 3px rgba(234, 53, 0, 0.14)",
+      borderColor: "var(--ring)",
+      boxShadow: "0 0 0 3px color-mix(in srgb, var(--ring) 16%, transparent)",
     },
     "&.Mui-disabled": {
-      backgroundColor: "rgba(241, 241, 241, 0.9)",
+      backgroundColor: "color-mix(in srgb, var(--muted) 90%, transparent)",
     },
   },
   "& .MuiInputBase-input": {
-    color: "#171b24",
-    WebkitTextFillColor: "#171b24",
+    color: "var(--foreground)",
+    WebkitTextFillColor: "var(--foreground)",
   },
   "& .MuiInputBase-input::placeholder": {
-    color: "#6f7787",
+    color: "var(--muted-foreground)",
     opacity: 1,
   },
   "& .MuiInputBase-input.Mui-disabled": {
-    WebkitTextFillColor: "rgba(23, 27, 36, 0.75)",
+    WebkitTextFillColor: "color-mix(in srgb, var(--foreground) 75%, transparent)",
   },
 };
 
-export function LoginFormSection({ formData, rememberMe, showPassword, isLoading, onUsernameChange, onPasswordChange, onRememberMeChange, onTogglePassword, onSubmit }: LoginFormSectionProps) {
+export function LoginFormSection({ formData, showPassword, isLoading, onUsernameChange, onPasswordChange, onTogglePassword, onSubmit }: LoginFormSectionProps) {
   return (
     <Box
       sx={{
@@ -69,20 +67,20 @@ export function LoginFormSection({ formData, rememberMe, showPassword, isLoading
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        backgroundColor: "#ececec",
+        backgroundColor: "var(--card)",
         fontFamily: "Poppins, Plus Jakarta Sans, Nunito Sans, sans-serif",
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.1, mb: { xs: 2.5, md: 4 } }}>
-        <Box sx={{ width: 12, height: 12, borderRadius: "999px", backgroundColor: "#ea3500" }} />
-        <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: "#171b24", letterSpacing: "0.01em" }}>HRIS UNPAM</Typography>
-      </Box>
+      {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1.1, mb: { xs: 2.5, md: 4 } }}>
+        <Box sx={{ width: 12, height: 12, borderRadius: "999px", backgroundColor: "var(--primary)" }} />
+        <Typography sx={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--foreground)", letterSpacing: "0.01em" }}>HRIS UNPAM</Typography>
+      </Box> */}
 
       <Typography
         component="h1"
         sx={{
           fontWeight: 800,
-          color: "#171b24",
+          color: "var(--foreground)",
           lineHeight: 1.15,
           letterSpacing: "-0.03em",
           fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
@@ -91,36 +89,24 @@ export function LoginFormSection({ formData, rememberMe, showPassword, isLoading
       >
         Selamat Datang,
       </Typography>
-      <Typography
+      {/* <Typography
         sx={{
           fontWeight: 800,
-          color: "#ea3500",
+          color: "var(--primary)",
           lineHeight: 1.1,
           letterSpacing: "-0.02em",
           fontSize: { xs: "2rem", sm: "2.5rem", md: "3rem" },
           mb: 2,
         }}
       >
-        HRIS Portal
-      </Typography>
+        HRMS SJ
+      </Typography> */}
 
-      <Typography sx={{ color: "#636b7a", mb: { xs: 3, md: 4 }, fontSize: "0.95rem" }}>Masuk untuk mengakses data karyawan, dashboard, dan layanan internal kampus.</Typography>
+      <Typography sx={{ color: "var(--muted-foreground)", mb: { xs: 3, md: 4 }, fontSize: "0.95rem" }}>Masuk untuk mengakses data karyawan, dashboard, dan layanan internal kampus.</Typography>
 
       <Box component="form" onSubmit={onSubmit}>
         <Stack spacing={2.1}>
-          <TextField
-            fullWidth
-            label="Username"
-            type="text"
-            value={formData.username}
-            onChange={(event) => onUsernameChange(event.target.value)}
-            required
-            autoComplete="username"
-            placeholder="contoh@unpam.ac.id"
-            disabled={isLoading}
-            size="small"
-            sx={textFieldSx}
-          />
+          <TextField fullWidth label="Username" type="text" value={formData.username} onChange={(event) => onUsernameChange(event.target.value)} required autoComplete="off" disabled={isLoading} size="small" sx={textFieldSx} />
 
           <TextField
             fullWidth
@@ -130,13 +116,13 @@ export function LoginFormSection({ formData, rememberMe, showPassword, isLoading
             onChange={(event) => onPasswordChange(event.target.value)}
             required
             autoComplete="current-password"
-            placeholder="Masukkan password"
+            placeholder=""
             disabled={isLoading}
             size="small"
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={onTogglePassword} edge="end" aria-label="toggle password visibility" sx={{ color: "#6f7787" }}>
+                  <IconButton onClick={onTogglePassword} edge="end" aria-label="toggle password visibility" sx={{ color: "var(--muted-foreground)" }}>
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -145,16 +131,16 @@ export function LoginFormSection({ formData, rememberMe, showPassword, isLoading
             sx={textFieldSx}
           />
 
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1 }}>
+          {/* <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 1 }}>
             <FormControlLabel
               control={<Checkbox size="small" checked={rememberMe} onChange={(event) => onRememberMeChange(event.target.checked)} />}
-              label={<Typography sx={{ fontSize: "0.85rem", color: "#6f7787" }}>Remember me</Typography>}
+              label={<Typography sx={{ fontSize: "0.85rem", color: "var(--muted-foreground)" }}>Remember me</Typography>}
               sx={{ m: 0 }}
             />
-            <Link href="#" underline="hover" sx={{ color: "#6f7787", fontWeight: 600, fontSize: "0.84rem" }}>
+            <Link href="#" underline="hover" sx={{ color: "var(--muted-foreground)", fontWeight: 600, fontSize: "0.84rem" }}>
               Forgot Password?
             </Link>
-          </Box>
+          </Box> */}
 
           <Button
             type="submit"
@@ -169,24 +155,24 @@ export function LoginFormSection({ formData, rememberMe, showPassword, isLoading
               textTransform: "none",
               fontSize: "0.95rem",
               fontWeight: 700,
-              backgroundColor: "#ea3500",
-              color: "#ffffff",
-              boxShadow: "0 12px 22px rgba(234, 53, 0, 0.28)",
+              backgroundColor: "var(--primary)",
+              color: "var(--primary-foreground)",
+              boxShadow: "0 12px 22px color-mix(in srgb, var(--primary) 28%, transparent)",
               "&:hover": {
-                backgroundColor: "#d22f00",
-                boxShadow: "0 16px 28px rgba(210, 47, 0, 0.3)",
+                backgroundColor: "color-mix(in srgb, var(--primary) 90%, black)",
+                boxShadow: "0 16px 28px color-mix(in srgb, var(--primary) 30%, transparent)",
               },
             }}
           >
             {isLoading ? "Signing In..." : "Sign In"}
           </Button>
 
-          <Typography sx={{ mt: 1, color: "#6f7787", fontSize: "0.83rem" }}>
+          {/* <Typography sx={{ mt: 1, color: "var(--muted-foreground)", fontSize: "0.83rem" }}>
             Belum punya akun?{" "}
-            <Link href="#" underline="hover" sx={{ color: "#ea3500", fontWeight: 700 }}>
+            <Link href="#" underline="hover" sx={{ color: "var(--primary)", fontWeight: 700 }}>
               Hubungi Admin
             </Link>
-          </Typography>
+          </Typography> */}
         </Stack>
       </Box>
     </Box>

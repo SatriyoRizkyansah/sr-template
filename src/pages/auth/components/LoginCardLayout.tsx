@@ -18,7 +18,7 @@ export function LoginCardLayout({ isLoading, formSection, visualSection }: Login
         justifyContent: "center",
         px: { xs: 2, md: 4, lg: 6 },
         py: { xs: 3, md: 5 },
-        backgroundColor: "#f3f4f6",
+        backgroundColor: "var(--background)",
       }}
     >
       <Card
@@ -28,8 +28,8 @@ export function LoginCardLayout({ isLoading, formSection, visualSection }: Login
           minHeight: { xs: "auto", md: 700 },
           borderRadius: { xs: "22px", md: "34px" },
           overflow: "hidden",
-          backgroundColor: "#ececec",
-          border: "1px solid rgba(255, 255, 255, 0.28)",
+          backgroundColor: "var(--card)",
+          border: "1px solid var(--border)",
           boxShadow: "0 30px 70px rgba(4, 8, 23, 0.45)",
           display: "grid",
           gridTemplateColumns: { xs: "1fr", md: "minmax(0, 44%) minmax(0, 56%)" },
@@ -43,7 +43,7 @@ export function LoginCardLayout({ isLoading, formSection, visualSection }: Login
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              backgroundColor: "rgba(236, 236, 236, 0.8)",
+              backgroundColor: "color-mix(in srgb, var(--card) 82%, transparent)",
               zIndex: 20,
             }}
           >

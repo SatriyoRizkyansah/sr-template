@@ -14,7 +14,6 @@ export function LoginPage() {
     username: "",
     password: "",
   });
-  const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -37,12 +36,10 @@ export function LoginPage() {
       formSection={
         <LoginFormSection
           formData={formData}
-          rememberMe={rememberMe}
           showPassword={showPassword}
           isLoading={isLoading}
           onUsernameChange={(value) => setFormData((prev) => ({ ...prev, username: value }))}
           onPasswordChange={(value) => setFormData((prev) => ({ ...prev, password: value }))}
-          onRememberMeChange={setRememberMe}
           onTogglePassword={() => setShowPassword((prev) => !prev)}
           onSubmit={handleSubmit}
         />
