@@ -3,7 +3,7 @@ import { Box, Container, Typography, Button, Paper } from "@mui/material";
 import { Home, SearchOff } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
-const NotFoundPage: React.FC = () => {
+export function NotFoundPage() {
   const navigate = useNavigate();
 
   return (
@@ -69,6 +69,6 @@ const NotFoundPage: React.FC = () => {
       </Box>
     </Container>
   );
-};
+}
 
 export default NotFoundPage;

@@ -1,8 +1,8 @@
 import React from "react";
-import DashboardLayout from "../layouts/DashboardLayout";
+import { DashboardLayout } from "../layouts";
 import { Typography, Box } from "@mui/material";
 
-const OrdersPage: React.FC = () => {
+export function OrdersPage() {
   return (
     <DashboardLayout title="Orders">
       <Box sx={{ py: 2, px: 3 }}>
@@ -15,6 +15,6 @@ const OrdersPage: React.FC = () => {
       </Box>
     </DashboardLayout>
   );
-};
+}
 
 export default OrdersPage;

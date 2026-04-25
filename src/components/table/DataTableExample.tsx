@@ -74,7 +74,7 @@ const EXAMPLE_USERS: User[] = [
  * }
  * ```
  */
-export const DataTableExample: React.FC = () => {
+export function DataTableExample() {
   // Define table columns
   const columns: Column<User>[] = useMemo(
     () => [
@@ -149,6 +149,6 @@ export const DataTableExample: React.FC = () => {
       />
     </div>
   );
-};
+}
 
 export default DataTableExample;

@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, ListItemButton, ListItemIcon, Typography } from "@mui/material";
 import type { NavItem } from "./sidebarItems";
 
@@ -9,7 +8,7 @@ interface SidebarNavItemProps {
   onNavigate: (path: string) => void;
 }
 
-const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ item, active, collapsed, onNavigate }) => {
+export function SidebarNavItem({ item, active, collapsed, onNavigate }: SidebarNavItemProps) {
   const showBadge = item.badge !== undefined && item.badge !== null;
 
   return (
@@ -104,6 +103,6 @@ const SidebarNavItem: React.FC<SidebarNavItemProps> = ({ item, active, collapsed
       </Box>
     </ListItemButton>
   );
-};
+}
 
 export default SidebarNavItem;

@@ -1,9 +1,8 @@
-import React from "react";
 import { Typography, Card, Box, Stack } from "@mui/material";
 import { TrendingUp, AttachMoney, ShoppingCart, People } from "@mui/icons-material";
-import DashboardLayout from "../layouts/DashboardLayout";
+import { DashboardLayout } from "../layouts";
 
-const DashboardPage: React.FC = () => {
+export function DashboardPage() {
   const stats = [
     { title: "Total Revenue", value: "$45,231", change: "+20.1%", icon: AttachMoney },
     { title: "Total Orders", value: "1,234", change: "+12.5%", icon: ShoppingCart },
@@ -315,6 +314,6 @@ const DashboardPage: React.FC = () => {
       </Box>
     </DashboardLayout>
   );
-};
+}
 
 export default DashboardPage;

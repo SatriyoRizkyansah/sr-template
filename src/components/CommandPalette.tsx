@@ -11,7 +11,7 @@ interface CommandPaletteProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen: externalOpen, onOpenChange }) => {
+export function CommandPalette({ isOpen: externalOpen, onOpenChange }: CommandPaletteProps) {
   const [internalOpen, setInternalOpen] = React.useState(false);
   const navigate = useNavigate();
   const { mode, toggleColorMode } = useTheme();
@@ -163,6 +163,6 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({ isOpen: externalOpen, o
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export default CommandPalette;

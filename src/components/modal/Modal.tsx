@@ -42,7 +42,7 @@ const actionVariantStyles: Record<NonNullable<ModalAction["variant"]>, Record<st
   },
 };
 
-export const Modal: React.FC<ModalProps> = ({ open, onClose, title, description, sections, children, actions, maxWidth = 520 }) => {
+export function Modal({ open, onClose, title, description, sections, children, actions, maxWidth = 520 }: ModalProps) {
   return (
     <Dialog
       open={open}
@@ -153,6 +153,6 @@ export const Modal: React.FC<ModalProps> = ({ open, onClose, title, description,
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export default Modal;

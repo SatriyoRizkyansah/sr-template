@@ -1,9 +1,7 @@
 import React, { useMemo, useState } from "react";
-import DashboardLayout from "../layouts/DashboardLayout";
 import { Typography, Box, Chip, Stack, TextField, MenuItem, InputAdornment } from "@mui/material";
-import { DataTable, type Column } from "../components/table";
-import Modal, { type ModalSection } from "../components/modal";
-import SoftButton from "../components/common/SoftButton";
+import { DashboardLayout } from "../layouts";
+import { DataTable, Modal, SoftButton, type Column, type ModalSection } from "../components";
 
 // Product data type
 interface Product {
@@ -104,7 +102,7 @@ const PRODUCTS: Product[] = [
 const CATEGORY_OPTIONS = ["Electronics", "Accessories", "Office"];
 const STATUS_OPTIONS: Product["status"][] = ["active", "inactive"];
 
-const MarketplacePage: React.FC = () => {
+export function MarketplacePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newProduct, setNewProduct] = useState({
     name: "",
@@ -309,6 +307,6 @@ const MarketplacePage: React.FC = () => {
       </Box>
     </DashboardLayout>
   );
-};
+}
 
 export default MarketplacePage;

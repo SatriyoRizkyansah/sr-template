@@ -22,7 +22,7 @@ const HtmlClassSync = () => {
   return null;
 };
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
+export function ThemeProvider({ children }: ThemeProviderProps) {
   return (
     <CssVarsProvider theme={appTheme} defaultMode="system" modeStorageKey="theme-mode" disableTransitionOnChange enableColorScheme>
       <CssBaseline />
@@ -30,4 +30,4 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
       {children}
     </CssVarsProvider>
   );
-};
+}

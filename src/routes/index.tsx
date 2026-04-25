@@ -1,6 +1,6 @@
-import React, { Suspense, lazy } from "react";
+import { Suspense, lazy } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Loader from "../components/loading/Loader";
+import { Loader } from "../components";
 
 const LoginPage = lazy(() => import("../views/LoginPage"));
 const DashboardPage = lazy(() => import("../views/DashboardPage"));
@@ -9,7 +9,7 @@ const OrdersPage = lazy(() => import("../views/OrdersPage"));
 const SettingsPage = lazy(() => import("../views/SettingsPage"));
 const NotFoundPage = lazy(() => import("../views/NotFoundPage"));
 
-export const AppRoutes: React.FC = () => {
+export function AppRoutes() {
   return (
     <Suspense fallback={<Loader />}>
       <Routes>
@@ -36,6 +36,6 @@ export const AppRoutes: React.FC = () => {
       </Routes>
     </Suspense>
   );
-};
+}
 
 export default AppRoutes;

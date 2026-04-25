@@ -3,7 +3,7 @@ import { Box, TextField, InputAdornment } from "@mui/material";
 import { Search as SearchIcon } from "@mui/icons-material";
 import type { TableToolbarProps } from "./types";
 
-export const TableToolbar: React.FC<TableToolbarProps> = ({ searchValue, onSearchChange, searchPlaceholder = "Search...", title }) => {
+export function TableToolbar({ searchValue, onSearchChange, searchPlaceholder = "Search...", title }: TableToolbarProps) {
   return (
     <Box
       sx={{
@@ -60,4 +60,4 @@ export const TableToolbar: React.FC<TableToolbarProps> = ({ searchValue, onSearc
       />
     </Box>
   );
-};
+}

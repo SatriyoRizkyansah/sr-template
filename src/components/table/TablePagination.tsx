@@ -3,7 +3,7 @@ import { Box, IconButton, MenuItem, Select, Typography } from "@mui/material";
 import { ChevronLeft, ChevronRight, KeyboardArrowDownRounded } from "@mui/icons-material";
 import type { TablePaginationProps } from "./types";
 
-export const TablePagination: React.FC<TablePaginationProps> = ({ page, rowsPerPage, totalRows, onPageChange, onRowsPerPageChange, rowsPerPageOptions = [5, 10, 25, 50] }) => {
+export function TablePagination({ page, rowsPerPage, totalRows, onPageChange, onRowsPerPageChange, rowsPerPageOptions = [5, 10, 25, 50] }: TablePaginationProps) {
   const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage));
   const isFirstPage = page === 0;
   const isLastPage = page >= totalPages - 1;
@@ -111,4 +111,4 @@ export const TablePagination: React.FC<TablePaginationProps> = ({ page, rowsPerP
       </Box>
     </Box>
   );
-};
+}

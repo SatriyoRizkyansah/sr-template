@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
-import Sidebar from "./Sidebar";
-import Navbar from "./Navbar";
+import { Navbar } from "./Navbar";
+import { Sidebar } from "./Sidebar";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
@@ -27,7 +27,7 @@ interface DashboardLayoutProps {
   title?: string;
 }
 
-const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) => {
+export function DashboardLayout({ children, title }: DashboardLayoutProps) {
   const [isCollapsed, setIsCollapsed] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("sidebar-collapsed");
@@ -137,6 +137,4 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title }) =>
       </Box>
     </SidebarContext.Provider>
   );
-};
-
-export default DashboardLayout;
+}

@@ -4,12 +4,12 @@ import { Search as SearchIcon, DarkMode as DarkModeIcon, LightMode as LightModeI
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useSidebar } from "./DashboardLayout";
 import { useTheme } from "../theme/useTheme";
-import CommandPalette from "../components/CommandPalette";
+import { CommandPalette } from "../components";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
 
-const Navbar: React.FC = () => {
+export function Navbar() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const { isCollapsed, setIsCollapsed } = useSidebar();
@@ -227,6 +227,4 @@ const Navbar: React.FC = () => {
       <CommandPalette isOpen={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
     </AppBar>
   );
-};
-
-export default Navbar;
+}

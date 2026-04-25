@@ -6,7 +6,7 @@ interface LoaderProps {
   hint?: string;
 }
 
-const Loader: React.FC<LoaderProps> = ({ label = "Loading" }) => {
+export function Loader({ label = "Loading" }: LoaderProps) {
   const blades = Array.from({ length: 12 });
 
   return (
@@ -35,6 +35,6 @@ const Loader: React.FC<LoaderProps> = ({ label = "Loading" }) => {
       <span className="sr-only">{label}</span>
     </div>
   );
-};
+}
 
 export default Loader;

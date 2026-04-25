@@ -3,7 +3,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import { Brightness4, Brightness7 } from "@mui/icons-material";
 import { useTheme } from "../theme";
 
-export const ThemeToggle: React.FC = () => {
+export function ThemeToggle() {
   const { mode, toggleColorMode } = useTheme();
 
   return (
@@ -13,4 +13,4 @@ export const ThemeToggle: React.FC = () => {
       </IconButton>
     </Tooltip>
   );
-};
+}

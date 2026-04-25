@@ -1,8 +1,8 @@
 import React from "react";
-import DashboardLayout from "../layouts/DashboardLayout";
+import { DashboardLayout } from "../layouts";
 import { Typography, Box } from "@mui/material";
 
-const SettingsPage: React.FC = () => {
+export function SettingsPage() {
   return (
     <DashboardLayout title="Settings">
       <Box sx={{ py: 2, px: 3 }}>
@@ -15,6 +15,6 @@ const SettingsPage: React.FC = () => {
       </Box>
     </DashboardLayout>
   );
-};
+}
 
 export default SettingsPage;

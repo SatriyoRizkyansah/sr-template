@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { Box, Card, CardContent, TextField, Button, Typography, IconButton, InputAdornment, Stack, Container } from "@mui/material";
 import { Visibility, VisibilityOff, LoginOutlined } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import Loader from "../components/loading/Loader";
+import { Loader } from "../components";
 
 interface LoginFormData {
   email: string;
   password: string;
 }
 
-const LoginPage: React.FC = () => {
+export function LoginPage() {
   const [formData, setFormData] = useState<LoginFormData>({
     email: "",
     password: "",
@@ -257,6 +257,6 @@ const LoginPage: React.FC = () => {
       </Container>
     </Box>
   );
-};
+}
 
 export default LoginPage;

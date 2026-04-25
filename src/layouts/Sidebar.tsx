@@ -1,15 +1,13 @@
-import React from "react";
 import { Box, Drawer, List, Typography, Avatar, IconButton, useMediaQuery, ListItemButton, ListItemIcon } from "@mui/material";
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, LogoutOutlined } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSidebar } from "./DashboardLayout";
-import SidebarNavItem from "./components/SidebarNavItem";
-import { sidebarSections, type NavItem } from "./components/sidebarItems";
+import { SidebarNavItem, sidebarSections, type NavItem } from "./components";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
 
-const Sidebar: React.FC = () => {
+export function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isCollapsed, setIsCollapsed } = useSidebar();
@@ -342,6 +340,4 @@ const Sidebar: React.FC = () => {
       </Box>
     </Drawer>
   );
-};
-
-export default Sidebar;
+}

@@ -6,7 +6,7 @@ const ROLE_TAGS = ["Angular", "Javascript", "Tailwind"];
 
 const durationOptions = ["30 min", "60 min", "90 min"];
 
-export const ModalExample: React.FC = () => {
+export function ModalExample() {
   const [open, setOpen] = useState(false);
   const [duration, setDuration] = useState<string>(durationOptions[0]);
 
@@ -92,6 +92,6 @@ export const ModalExample: React.FC = () => {
       />
     </>
   );
-};
+}
 
 export default ModalExample;
