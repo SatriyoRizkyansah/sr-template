@@ -5,7 +5,7 @@
  * with all its features: search, filter, pagination, and sorting
  */
 
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { DataTable, type Column } from "./index";
 
 // Example data type

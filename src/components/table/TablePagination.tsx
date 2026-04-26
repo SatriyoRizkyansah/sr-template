@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, IconButton, MenuItem, Select, Typography } from "@mui/material";
 import { ChevronLeft, ChevronRight, KeyboardArrowDownRounded } from "@mui/icons-material";
 import type { TablePaginationProps } from "./types";

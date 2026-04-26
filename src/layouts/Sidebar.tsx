@@ -1,8 +1,11 @@
-import { Box, Drawer, List, Typography, Avatar, IconButton, useMediaQuery, ListItemButton, ListItemIcon } from "@mui/material";
+import { useMemo, useState } from "react";
+import { Box, Drawer, List, Typography, Avatar, IconButton, useMediaQuery, ListItemButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
 import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, LogoutOutlined } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSidebar } from "./DashboardLayout";
 import { SidebarNavItem, sidebarSections, type NavItem } from "./components";
+import { useSignalValue } from "@Signal/hooks";
+import { auth_signal, clear_auth, set_selected_token } from "@Signal/use-signal/auth-init-signal";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
@@ -12,6 +15,27 @@ export function Sidebar() {
   const location = useLocation();
   const { isCollapsed, setIsCollapsed } = useSidebar();
   const isMobile = useMediaQuery("(max-width:767px)");
+  const authState = useSignalValue(auth_signal);
+  const [aksesMenuAnchor, setAksesMenuAnchor] = useState<null | HTMLElement>(null);
+
+  const userName = authState?.loginResponse?.nama || "Guest";
+  const activeAkses = authState?.selectedAuthorization?.akses || authState?.loginResponse?.akses?.[0]?.akses || "Tidak ada akses";
+  const aksesList = authState?.loginResponse?.akses || [];
+
+  const userInitials = useMemo(() => {
+    const chunks = userName
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2);
+
+    if (chunks.length === 0) {
+      return "U";
+    }
+
+    return chunks.map((chunk) => chunk.charAt(0).toUpperCase()).join("");
+  }, [userName]);
+
   const sidebarWidth = isCollapsed ? drawerWidthCollapsed : drawerWidth;
   const drawerPaperWidth = isMobile ? drawerWidth : sidebarWidth;
 
@@ -74,7 +98,29 @@ export function Sidebar() {
   );
 
   const handleLogout = () => {
-    navigate("/login");
+    clear_auth();
+    navigate("/login", { replace: true });
+  };
+
+  const handleOpenAksesMenu = (event: React.MouseEvent<HTMLElement>) => {
+    if (aksesList.length <= 1) {
+      return;
+    }
+    setAksesMenuAnchor(event.currentTarget);
+  };
+
+  const handleCloseAksesMenu = () => {
+    setAksesMenuAnchor(null);
+  };
+
+  const handleSwitchAkses = (aksesIndex: number) => {
+    const nextAkses = aksesList[aksesIndex];
+    if (!nextAkses) {
+      return;
+    }
+
+    set_selected_token(nextAkses);
+    setAksesMenuAnchor(null);
   };
 
   return (
@@ -254,6 +300,7 @@ export function Sidebar() {
         }}
       >
         <Box
+          onClick={handleOpenAksesMenu}
           sx={{
             display: "flex",
             alignItems: "center",
@@ -281,7 +328,7 @@ export function Sidebar() {
               color: "var(--foreground)",
             }}
           >
-            HN
+            {userInitials}
           </Avatar>
           <Box
             sx={{
@@ -302,14 +349,46 @@ export function Sidebar() {
               }}
             >
               <Typography variant="body2" fontWeight={600} sx={{ color: "var(--foreground)", whiteSpace: "nowrap" }}>
-                Harper Nelson
+                {userName}
               </Typography>
               <Typography variant="caption" sx={{ color: "var(--muted-foreground)", whiteSpace: "nowrap" }}>
-                Admin Manager
+                {activeAkses}
               </Typography>
             </Box>
           </Box>
         </Box>
+        <Menu
+          anchorEl={aksesMenuAnchor}
+          open={Boolean(aksesMenuAnchor)}
+          onClose={handleCloseAksesMenu}
+          PaperProps={{
+            sx: {
+              mt: 1,
+              borderRadius: "10px",
+              border: "1px solid var(--border)",
+              backgroundColor: "var(--card)",
+              minWidth: 240,
+            },
+          }}
+        >
+          {aksesList.map((aksesItem, index) => {
+            const isSelected = aksesItem.token === authState?.selectedToken;
+
+            return (
+              <MenuItem
+                key={`${aksesItem.akses}-${index}`}
+                onClick={() => handleSwitchAkses(index)}
+                selected={isSelected}
+                sx={{
+                  fontSize: "0.875rem",
+                  fontWeight: isSelected ? 700 : 500,
+                }}
+              >
+                {aksesItem.akses}
+              </MenuItem>
+            );
+          })}
+        </Menu>
         <ListItemButton
           onClick={handleLogout}
           sx={{

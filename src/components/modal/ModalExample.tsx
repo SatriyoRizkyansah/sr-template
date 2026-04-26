@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import { Box, Button, Stack, Chip, Avatar, TextField, MenuItem, ToggleButtonGroup, ToggleButton } from "@mui/material";
 import Modal, { type ModalSection } from "./Modal";
+import { useState } from "react";
 
 const ROLE_TAGS = ["Angular", "Javascript", "Tailwind"];
 

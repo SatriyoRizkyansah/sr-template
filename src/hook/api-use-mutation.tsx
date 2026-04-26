@@ -1,13 +1,14 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { type SnackbarProps } from "@mui/material";
 
 import network_cache from "./api-cache";
-import { Api } from "./api-generated.ts";
-import { auth_signal } from "../library/@signal-private/use-signal/auth-init-signal";
-import { set_loading_to } from "../library/@signal-private/use-signal/loading-method-signal";
-import { loading_progress_signal } from "../library/@signal-private/use-signal/loading-progress-init-signal";
-import { close_dialog } from "../library/@signal-private/use-signal/dialog-method-signal";
-import { show_alert_snackbar } from "../library/@signal-private/use-signal/snackbar_signal";
+import { Api } from "@Hooks/api-generated";
+import { auth_signal } from "@Signal/use-signal/auth-init-signal";
+import { set_loading_to } from "@Signal/use-signal/loading-method-signal";
+import { loading_progress_signal } from "@Signal/use-signal/loading-progress-init-signal";
+import { close_dialog } from "@Signal/use-signal/dialog-method-signal";
+import { show_alert_snackbar } from "@Signal/use-signal/snackbar_signal";
 
 /**
  * Generate dynamic loading label berdasarkan method name

@@ -1,15 +1,15 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect } from "react";
-import type { DependencyList } from "react";
+import { DependencyList, useEffect } from "react";
 import network_cache from "./api-cache";
-import { show_alert_snackbar } from "../library/@signal-private/use-signal/snackbar_signal";
-import { auth_signal } from "../library/@signal-private/use-signal/auth-init-signal";
-import { Api } from "./api-generated.ts";
-import { parseApiError } from "../common/api-error-handler";
-import { close_loading, show_loading } from "../library/@signal-private/use-signal/loading-method-signal";
-import { useSignalValue, useSignal } from "../library/@signal-private/hooks/hooks";
-
+import { show_alert_snackbar } from "@Signal/use-signal/snackbar_signal";
+import { auth_signal } from "@Signal/use-signal/auth-init-signal";
+import { Api } from "@Hooks/api-generated";
+import { parseApiError } from "src/common/api-error-handler";
+import { close_loading, show_loading } from "@Signal/use-signal/loading-method-signal";
+// import { useSignalValue, useSignal } from "@Signal/hooks";
+import { useSignalValue, useSignal } from "@Signal/hooks";
 export class UseQueryReturnType<
   Tags extends keyof Api<any>,
   Method extends keyof Api<any>[Tags],
@@ -56,6 +56,7 @@ export default function use_query<
   const { api_tag, api_method, api_query, should_running_if = true, options } = props;
 
   // Subscribe to auth signal so queries refetch when token/role changes
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const authState = useSignalValue(auth_signal);
   const selectedToken = authState?.selectedToken || "";
 
@@ -163,6 +164,7 @@ export default function use_query<
       () => {
         fetch_data_from_server();
       },
+      // @ts-ignore - hardcoded method/tag untuk debounce khusus lokasi search
       method === "lokasi" && tag === "searchOptimize" ? 300 : 0,
     );
 
