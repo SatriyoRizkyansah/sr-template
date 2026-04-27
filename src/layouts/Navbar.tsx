@@ -1,16 +1,16 @@
-import React, { useState } from "react";
-import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, Avatar, Menu, MenuItem, useMediaQuery, useTheme as useMuiTheme } from "@mui/material";
+import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, useMediaQuery, useTheme as useMuiTheme } from "@mui/material";
 import { Search as SearchIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon } from "@mui/icons-material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useSidebar } from "./DashboardLayout";
 import { useTheme } from "../theme/useTheme";
 import { CommandPalette } from "../components";
+import { useState } from "react";
 
 const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
 
 export function Navbar() {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const { isCollapsed, setIsCollapsed } = useSidebar();
   const { mode, toggleColorMode } = useTheme();
@@ -19,13 +19,13 @@ export function Navbar() {
   const sidebarWidth = isCollapsed ? drawerWidthCollapsed : drawerWidth;
   const currentWidth = isMobile ? 0 : sidebarWidth;
 
-  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleMenuClose = () => {
+  //   setAnchorEl(null);
+  // };
 
   return (
     <AppBar
@@ -147,7 +147,7 @@ export function Navbar() {
             {mode === "dark" ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
           </IconButton>
 
-          <Avatar
+          {/* <Avatar
             onClick={handleMenuOpen}
             sx={{
               width: 40,
@@ -221,7 +221,7 @@ export function Navbar() {
                 </Typography>
               </Box>
             </MenuItem>
-          </Menu>
+          </Menu> */}
         </Box>
       </Toolbar>
       <CommandPalette isOpen={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />

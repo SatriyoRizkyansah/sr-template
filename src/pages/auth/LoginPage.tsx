@@ -5,6 +5,7 @@ import { set_login_response, set_selected_token } from "@Signal/use-signal/auth-
 import { show_alert_snackbar } from "@Signal/use-signal/snackbar_signal";
 import { LoginCardLayout, LoginFormSection, LoginVisualSection } from "./components";
 import use_mutation from "@Hooks/api-use-mutation";
+import loginImage from "../../assets/images/login.png";
 
 interface LoginFormData {
   username: string;
@@ -24,10 +25,9 @@ export function LoginPage() {
     api_tag: "auth",
     api_method: "login",
     options: {
-      should_disable_loading: true,
-      should_disable_success_message: true,
+      should_disable_loading: false,
+      should_disable_success_message: false,
       should_disable_error_message: false,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       will_exec_after_success: (response: any) => {
         if (!response?.data?.data) {
           setIsSubmittingLogin(false);
@@ -58,7 +58,6 @@ export function LoginPage() {
 
         setIsSubmittingLogin(false);
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       will_exec_after_error: (error: any) => {
         setIsSubmittingLogin(false);
         show_alert_snackbar({
@@ -96,7 +95,7 @@ export function LoginPage() {
           onSubmit={handleSubmit}
         />
       }
-      visualSection={<LoginVisualSection imageSrc={"./../../assets/images/login.png"} />}
+      visualSection={<LoginVisualSection imageSrc={loginImage} />}
     />
   );
 }

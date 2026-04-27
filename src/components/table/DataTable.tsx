@@ -7,7 +7,6 @@ import { TablePagination } from "./TablePagination";
 import { processTableData } from "./utils";
 import type { DataTableProps } from "./types";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnyData = any;
 
 /**

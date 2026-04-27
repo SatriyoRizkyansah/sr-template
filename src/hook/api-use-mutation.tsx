@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { type SnackbarProps } from "@mui/material";
 
 import network_cache from "./api-cache";

@@ -102,7 +102,7 @@ export function LoginFormSection({ formData, showPassword, isLoading, onUsername
         HRMS SJ
       </Typography> */}
 
-      <Typography sx={{ color: "var(--muted-foreground)", mb: { xs: 3, md: 4 }, fontSize: "0.95rem" }}>Masuk untuk mengakses data karyawan, dashboard, dan layanan internal kampus.</Typography>
+      <Typography sx={{ color: "var(--muted-foreground)", mb: { xs: 3, md: 4 }, fontSize: "0.95rem" }}>Silakan masuk untuk mengakses sistem dan informasi yang tersedia.</Typography>
 
       <Box component="form" onSubmit={onSubmit}>
         <Stack spacing={2.1}>
@@ -164,7 +164,7 @@ export function LoginFormSection({ formData, showPassword, isLoading, onUsername
               },
             }}
           >
-            {isLoading ? "Signing In..." : "Sign In"}
+            {isLoading ? "Masuk..." : "Masuk"}
           </Button>
 
           {/* <Typography sx={{ mt: 1, color: "var(--muted-foreground)", fontSize: "0.83rem" }}>
