@@ -5,6 +5,9 @@ import { Dialog, DialogContent, Box } from "@mui/material";
 import { useTheme } from "../theme/useTheme";
 import { KeyboardArrowRightRounded as ArrowIcon } from "@mui/icons-material";
 import "./CommandPalette.css";
+import { useSignalValue } from "@Signal/hooks";
+import { auth_signal } from "@Signal/use-signal/auth-init-signal";
+import { get_sidebar_sections, resolve_menu_role_from_akses } from "../layouts/components";
 
 interface CommandPaletteProps {
   isOpen?: boolean;
@@ -15,6 +18,7 @@ export function CommandPalette({ isOpen: externalOpen, onOpenChange }: CommandPa
   const [internalOpen, setInternalOpen] = React.useState(false);
   const navigate = useNavigate();
   const { mode, toggleColorMode } = useTheme();
+  const authState = useSignalValue(auth_signal);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   const currentOpen = externalOpen !== undefined ? externalOpen : internalOpen;
@@ -51,30 +55,20 @@ export function CommandPalette({ isOpen: externalOpen, onOpenChange }: CommandPa
     }
   }, [currentOpen]);
 
-  const commandSections = [
-    {
-      heading: "Pages",
-      items: [
-        { label: "Dashboard", path: "/dashboard", keywords: ["home", "dashboard", "overview"] },
-        { label: "Marketplace", path: "/marketplace", keywords: ["shop", "marketplace", "store"] },
-        { label: "Orders", path: "/orders", keywords: ["order", "orders", "purchases"] },
-        { label: "Tracking", path: "/tracking", keywords: ["track", "tracking", "shipment"] },
-        { label: "Customers", path: "/customers", keywords: ["customer", "customers", "users", "people"] },
-        { label: "Discounts", path: "/discounts", keywords: ["discount", "discounts", "promo", "offer"] },
-      ],
-    },
-    {
-      heading: "Finance",
-      items: [
-        { label: "Ledger", path: "/ledger", keywords: ["ledger", "accounting", "books"] },
-        { label: "Taxes", path: "/taxes", keywords: ["tax", "taxes", "finance"] },
-      ],
-    },
-    {
-      heading: "Components",
-      items: [{ label: "Settings", path: "/settings", keywords: ["setting", "settings", "config", "configuration"] }],
-    },
-  ];
+  const commandSections = React.useMemo(() => {
+    const activeAkses = authState?.selectedAuthorization?.akses;
+    const role = resolve_menu_role_from_akses(activeAkses);
+    const sections = get_sidebar_sections(role);
+
+    return sections.map((section) => ({
+      heading: section.title,
+      items: section.items.map((item) => ({
+        label: item.title,
+        path: item.path,
+        keywords: [item.title.toLowerCase(), section.title.toLowerCase(), role],
+      })),
+    }));
+  }, [authState?.selectedAuthorization?.akses]);
 
   const renderCommandItem = (item: { label: string; keywords: string[]; action: () => void; value: string }) => {
     const handleAction = () => {

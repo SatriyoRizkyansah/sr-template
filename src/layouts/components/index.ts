@@ -1,3 +1,3 @@
 export { SidebarNavItem } from "./SidebarNavItem";
-export { sidebarSections } from "./sidebarItems";
-export type { NavItem } from "./sidebarItems";
+export { get_sidebar_sections, resolve_menu_role_from_akses, get_role_home_path } from "./sidebarItems";
+export type { NavItem, SidebarSection, MenuRole } from "./sidebarItems";

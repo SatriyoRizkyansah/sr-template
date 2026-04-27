@@ -10,7 +10,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSidebar } from "./DashboardLayout";
-import { SidebarNavItem, sidebarSections, type NavItem } from "./components";
+import { SidebarNavItem, get_sidebar_sections, resolve_menu_role_from_akses, type NavItem } from "./components";
 import { useSignalValue } from "@Signal/hooks";
 import { auth_signal, clear_auth, set_selected_token } from "@Signal/use-signal/auth-init-signal";
 
@@ -28,6 +28,8 @@ export function Sidebar() {
   const userName = authState?.loginResponse?.nama || "Guest";
   const activeAkses = authState?.selectedAuthorization?.akses || authState?.loginResponse?.akses?.[0]?.akses || "Tidak ada akses";
   const aksesList = authState?.loginResponse?.akses || [];
+  const currentMenuRole = resolve_menu_role_from_akses(activeAkses);
+  const sidebarSections = get_sidebar_sections(currentMenuRole);
   const canSwitchAkses = aksesList.length > 1;
   const isAksesMenuOpen = Boolean(aksesMenuAnchor);
 
