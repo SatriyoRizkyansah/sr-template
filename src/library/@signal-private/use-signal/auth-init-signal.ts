@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 import { EJenisActor } from "@Utils/enum";
 
 const AUTH_COOKIE_SELECTED_TOKEN = "selectedToken";
-const AUTH_COOKIE_LOGIN_RESPONSE = "loginResponse";
+const AUTH_COOKIE_AKSES_LIST = "aksesList";
 
 const AUTH_COOKIE_OPTIONS = {
   expires: 7,
@@ -27,6 +27,9 @@ type DecodedJwtPayload = {
   jenis_actor?: string;
   role?: string;
   roles?: string[];
+  id_pegawai?: string;
+  nama?: string;
+  foto?: string;
 } & Record<string, unknown>;
 
 const normalize_role = (value: string): string => {
@@ -48,6 +51,53 @@ const decode_jwt = (token: string): DecodedJwtPayload | undefined => {
 
 const find_selected_authorization = (loginResponse: LoginUserDto, selectedToken: string): AksesItemDto | undefined => {
   return loginResponse.akses?.find((auth) => auth.token === selectedToken);
+};
+
+const get_cookie_item = (key: string): string | undefined => Cookies.get(key);
+
+const set_cookie_item = (key: string, value: string) => {
+  Cookies.set(key, value, AUTH_COOKIE_OPTIONS);
+};
+
+const remove_cookie_item = (key: string) => {
+  Cookies.remove(key);
+  Cookies.remove(key, { path: "/" });
+};
+
+const parse_akses_list = (raw: string | null): AksesItemDto[] => {
+  if (!raw) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as AksesItemDto[];
+    return Array.isArray(parsed) ? parsed.filter((item) => typeof item?.akses === "string" && typeof item?.token === "string") : [];
+  } catch {
+    return [];
+  }
+};
+
+const find_akses_by_token = (aksesList: AksesItemDto[], selectedToken: string): AksesItemDto | undefined => {
+  return aksesList.find((aksesItem) => aksesItem.token === selectedToken);
+};
+
+const resolve_selected_token_for_akses = (aksesList: AksesItemDto[], preferredToken?: string): string | undefined => {
+  if (preferredToken && find_akses_by_token(aksesList, preferredToken)) {
+    return preferredToken;
+  }
+
+  return aksesList[0]?.token;
+};
+
+const build_login_response_from_akses = (aksesList: AksesItemDto[], selectedToken: string): LoginUserDto => {
+  const decodedData = decode_jwt(selectedToken);
+
+  return {
+    id_pegawai: typeof decodedData?.id_pegawai === "string" ? decodedData.id_pegawai : "",
+    nama: typeof decodedData?.nama === "string" ? decodedData.nama : "Guest",
+    foto: typeof decodedData?.foto === "string" ? decodedData.foto : undefined,
+    akses: aksesList,
+  };
 };
 
 const build_auth_state = (selectedToken: string, loginResponse: LoginUserDto): AuthSignalType | undefined => {
@@ -78,19 +128,26 @@ const is_token_expired = (payload?: DecodedJwtPayload): boolean => {
 };
 
 function auth_signal_initial_value(): AuthSignalType {
-  const selectedToken = Cookies.get(AUTH_COOKIE_SELECTED_TOKEN);
-  const loginResponse = Cookies.get(AUTH_COOKIE_LOGIN_RESPONSE);
+  const selectedToken = get_cookie_item(AUTH_COOKIE_SELECTED_TOKEN);
+  const storedAkses = parse_akses_list(get_cookie_item(AUTH_COOKIE_AKSES_LIST) ?? null);
+  const resolvedToken = resolve_selected_token_for_akses(storedAkses, selectedToken ?? undefined);
 
-  if (!selectedToken || !loginResponse) {
+  if (!resolvedToken || storedAkses.length === 0) {
     return {};
   }
 
   try {
-    const parsedLoginResponse: LoginUserDto = JSON.parse(loginResponse);
-    const authState = build_auth_state(selectedToken, parsedLoginResponse);
+    const parsedLoginResponse = build_login_response_from_akses(storedAkses, resolvedToken);
+    const authState = build_auth_state(resolvedToken, parsedLoginResponse);
 
     if (!authState || is_token_expired(authState.data as DecodedJwtPayload)) {
+      remove_cookie_item(AUTH_COOKIE_SELECTED_TOKEN);
+      remove_cookie_item(AUTH_COOKIE_AKSES_LIST);
       return {};
+    }
+
+    if (selectedToken !== resolvedToken) {
+      set_cookie_item(AUTH_COOKIE_SELECTED_TOKEN, resolvedToken);
     }
 
     return authState;
@@ -101,11 +158,31 @@ function auth_signal_initial_value(): AuthSignalType {
 
 export const auth_signal = signal<AuthSignalType>(auth_signal_initial_value());
 
-// Set login response dan simpan ke cookie
+const get_login_response_from_state_or_storage = (): LoginUserDto | undefined => {
+  if (auth_signal.value.loginResponse) {
+    return auth_signal.value.loginResponse;
+  }
+
+  const aksesList = parse_akses_list(get_cookie_item(AUTH_COOKIE_AKSES_LIST) ?? null);
+  const selectedToken = get_cookie_item(AUTH_COOKIE_SELECTED_TOKEN);
+  const resolvedToken = resolve_selected_token_for_akses(aksesList, selectedToken ?? undefined);
+
+  if (!resolvedToken || aksesList.length === 0) {
+    return undefined;
+  }
+
+  try {
+    return build_login_response_from_akses(aksesList, resolvedToken);
+  } catch {
+    return undefined;
+  }
+};
+
+// Set login response dan simpan akses ke cookie
 export const set_login_response = (response: LoginUserDto) => {
-  const selectedTokenFromCookie = Cookies.get(AUTH_COOKIE_SELECTED_TOKEN) || auth_signal.value.selectedToken;
-  const fallbackToken = response.akses?.[0]?.token;
-  const nextToken = selectedTokenFromCookie || fallbackToken;
+  const aksesList = response.akses ?? [];
+  const selectedTokenFromCookie = get_cookie_item(AUTH_COOKIE_SELECTED_TOKEN) || auth_signal.value.selectedToken;
+  const nextToken = resolve_selected_token_for_akses(aksesList, selectedTokenFromCookie ?? undefined);
 
   const nextAuthState = nextToken ? build_auth_state(nextToken, response) : undefined;
 
@@ -114,38 +191,41 @@ export const set_login_response = (response: LoginUserDto) => {
     loginResponse: response,
   };
 
-  Cookies.set(AUTH_COOKIE_LOGIN_RESPONSE, JSON.stringify(response), AUTH_COOKIE_OPTIONS);
+  set_cookie_item(AUTH_COOKIE_AKSES_LIST, JSON.stringify(aksesList));
 
   if (nextAuthState?.selectedToken) {
-    Cookies.set(AUTH_COOKIE_SELECTED_TOKEN, nextAuthState.selectedToken, AUTH_COOKIE_OPTIONS);
+    set_cookie_item(AUTH_COOKIE_SELECTED_TOKEN, nextAuthState.selectedToken);
   } else {
-    Cookies.remove(AUTH_COOKIE_SELECTED_TOKEN, { path: "/" });
-    Cookies.remove(AUTH_COOKIE_SELECTED_TOKEN);
+    remove_cookie_item(AUTH_COOKIE_SELECTED_TOKEN);
   }
 };
 
 // Set selected authorization token dan simpan ke cookie
-export const set_selected_token = (authorization: AksesItemDto) => {
+export const set_selected_token = (selectedToken: string) => {
   try {
-    const actualToken = authorization.token;
-
-    const decodedData = decode_jwt(actualToken);
-    if (!decodedData) {
-      throw new Error("Invalid JWT token");
+    const loginResponse = get_login_response_from_state_or_storage();
+    if (!loginResponse) {
+      throw new Error("Missing login response");
     }
 
-    if (is_token_expired(decodedData)) {
+    const nextAuthState = build_auth_state(selectedToken, loginResponse);
+    if (!nextAuthState) {
+      throw new Error("Selected token is not available in login response or invalid");
+    }
+
+    if (is_token_expired(nextAuthState.data as DecodedJwtPayload)) {
       throw new Error("JWT token is expired");
     }
 
     auth_signal.value = {
       ...auth_signal.value,
-      selectedToken: actualToken,
-      selectedAuthorization: authorization,
-      data: decodedData,
+      selectedToken: nextAuthState.selectedToken,
+      selectedAuthorization: nextAuthState.selectedAuthorization,
+      data: nextAuthState.data,
+      loginResponse,
     };
 
-    Cookies.set(AUTH_COOKIE_SELECTED_TOKEN, actualToken, AUTH_COOKIE_OPTIONS);
+    set_cookie_item(AUTH_COOKIE_SELECTED_TOKEN, selectedToken);
   } catch (error) {
     console.error("Error setting selected token:", error);
     throw new Error(`Failed to set selected token: ${error instanceof Error ? error.message : "Unknown error"}`);
@@ -156,10 +236,8 @@ export const set_selected_token = (authorization: AksesItemDto) => {
 export const clear_auth = () => {
   auth_signal.value = {};
   network_cache.clear();
-  Cookies.remove(AUTH_COOKIE_SELECTED_TOKEN);
-  Cookies.remove(AUTH_COOKIE_SELECTED_TOKEN, { path: "/" });
-  Cookies.remove(AUTH_COOKIE_LOGIN_RESPONSE);
-  Cookies.remove(AUTH_COOKIE_LOGIN_RESPONSE, { path: "/" });
+  remove_cookie_item(AUTH_COOKIE_SELECTED_TOKEN);
+  remove_cookie_item(AUTH_COOKIE_AKSES_LIST);
 };
 
 // untuk cek role berdasarkan jenis_actor dari JWT data
@@ -188,23 +266,25 @@ export const has_akses = (akses: string | string[]) => {
 
 // Force refresh auth state from cookies (for immediate validation)
 export const refresh_auth_from_cookies = () => {
-  const selectedToken = Cookies.get(AUTH_COOKIE_SELECTED_TOKEN);
-  const loginResponse = Cookies.get(AUTH_COOKIE_LOGIN_RESPONSE);
+  const selectedToken = get_cookie_item(AUTH_COOKIE_SELECTED_TOKEN);
+  const aksesList = parse_akses_list(get_cookie_item(AUTH_COOKIE_AKSES_LIST) ?? null);
+  const resolvedToken = resolve_selected_token_for_akses(aksesList, selectedToken ?? undefined);
 
-  if (!selectedToken || !loginResponse) {
+  if (!resolvedToken || aksesList.length === 0) {
     clear_auth();
     return false;
   }
 
   try {
-    const parsedLoginResponse: LoginUserDto = JSON.parse(loginResponse);
-    const authState = build_auth_state(selectedToken, parsedLoginResponse);
+    const parsedLoginResponse = build_login_response_from_akses(aksesList, resolvedToken);
+    const authState = build_auth_state(resolvedToken, parsedLoginResponse);
     if (!authState || is_token_expired(authState.data as DecodedJwtPayload)) {
       clear_auth();
       return false;
     }
 
     auth_signal.value = authState;
+    set_cookie_item(AUTH_COOKIE_SELECTED_TOKEN, resolvedToken);
 
     return true;
   } catch {

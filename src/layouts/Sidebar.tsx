@@ -1,6 +1,13 @@
 import { useMemo, useState } from "react";
 import { Box, Drawer, List, Typography, Avatar, IconButton, useMediaQuery, ListItemButton, ListItemIcon, Menu, MenuItem } from "@mui/material";
-import { ChevronLeft as ChevronLeftIcon, ChevronRight as ChevronRightIcon, LogoutOutlined } from "@mui/icons-material";
+import {
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  LogoutOutlined,
+  SwapHorizRounded as SwapHorizRoundedIcon,
+  KeyboardArrowDownRounded as KeyboardArrowDownRoundedIcon,
+  CheckRounded as CheckRoundedIcon,
+} from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSidebar } from "./DashboardLayout";
 import { SidebarNavItem, sidebarSections, type NavItem } from "./components";
@@ -21,13 +28,11 @@ export function Sidebar() {
   const userName = authState?.loginResponse?.nama || "Guest";
   const activeAkses = authState?.selectedAuthorization?.akses || authState?.loginResponse?.akses?.[0]?.akses || "Tidak ada akses";
   const aksesList = authState?.loginResponse?.akses || [];
+  const canSwitchAkses = aksesList.length > 1;
+  const isAksesMenuOpen = Boolean(aksesMenuAnchor);
 
   const userInitials = useMemo(() => {
-    const chunks = userName
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2);
+    const chunks = userName.trim().split(/\s+/).filter(Boolean).slice(0, 2);
 
     if (chunks.length === 0) {
       return "U";
@@ -103,7 +108,7 @@ export function Sidebar() {
   };
 
   const handleOpenAksesMenu = (event: React.MouseEvent<HTMLElement>) => {
-    if (aksesList.length <= 1) {
+    if (!canSwitchAkses) {
       return;
     }
     setAksesMenuAnchor(event.currentTarget);
@@ -119,8 +124,14 @@ export function Sidebar() {
       return;
     }
 
-    set_selected_token(nextAkses);
-    setAksesMenuAnchor(null);
+    try {
+      set_selected_token(nextAkses.token);
+      setAksesMenuAnchor(null);
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to switch akses:", error);
+      setAksesMenuAnchor(null);
+    }
   };
 
   return (
@@ -306,15 +317,15 @@ export function Sidebar() {
             alignItems: "center",
             gap: 1.5,
             p: 1.25,
-            borderRadius: "10px",
-            border: "1px solid var(--border)",
+            borderRadius: "12px",
+            border: canSwitchAkses ? "1px solid color-mix(in srgb, var(--primary) 34%, var(--border))" : "1px solid var(--border)",
             backgroundColor: "var(--card)",
-            cursor: "pointer",
+            cursor: canSwitchAkses ? "pointer" : "default",
             transition: "all 0.2s ease",
             justifyContent: isCollapsed ? "center" : "flex-start",
             "&:hover": {
-              borderColor: "var(--primary)",
-              boxShadow: "0 2px 8px rgba(15, 23, 42, 0.08)",
+              borderColor: canSwitchAkses ? "var(--primary)" : "var(--border)",
+              boxShadow: canSwitchAkses ? "0 8px 18px rgba(15, 23, 42, 0.08)" : "none",
             },
           }}
         >
@@ -351,23 +362,30 @@ export function Sidebar() {
               <Typography variant="body2" fontWeight={600} sx={{ color: "var(--foreground)", whiteSpace: "nowrap" }}>
                 {userName}
               </Typography>
-              <Typography variant="caption" sx={{ color: "var(--muted-foreground)", whiteSpace: "nowrap" }}>
-                {activeAkses}
-              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 0.6, minWidth: 0 }}>
+                <SwapHorizRoundedIcon sx={{ fontSize: "0.95rem", color: canSwitchAkses ? "var(--primary)" : "var(--muted-foreground)" }} />
+                <Typography variant="caption" sx={{ color: "var(--muted-foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                  {activeAkses}
+                </Typography>
+              </Box>
             </Box>
           </Box>
+
+          {!isCollapsed && canSwitchAkses && <KeyboardArrowDownRoundedIcon sx={{ color: "var(--muted-foreground)", transform: isAksesMenuOpen ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.2s ease" }} />}
         </Box>
         <Menu
           anchorEl={aksesMenuAnchor}
-          open={Boolean(aksesMenuAnchor)}
+          open={isAksesMenuOpen}
           onClose={handleCloseAksesMenu}
           PaperProps={{
             sx: {
               mt: 1,
-              borderRadius: "10px",
+              borderRadius: "12px",
               border: "1px solid var(--border)",
               backgroundColor: "var(--card)",
               minWidth: 240,
+              boxShadow: "0 12px 28px rgba(15, 23, 42, 0.12)",
+              overflow: "hidden",
             },
           }}
         >
@@ -380,11 +398,22 @@ export function Sidebar() {
                 onClick={() => handleSwitchAkses(index)}
                 selected={isSelected}
                 sx={{
-                  fontSize: "0.875rem",
+                  py: 1,
+                  gap: 0.5,
+                  fontSize: "0.89rem",
                   fontWeight: isSelected ? 700 : 500,
+                  "&.Mui-selected": {
+                    backgroundColor: "color-mix(in srgb, var(--primary) 14%, transparent)",
+                  },
+                  "&.Mui-selected:hover": {
+                    backgroundColor: "color-mix(in srgb, var(--primary) 20%, transparent)",
+                  },
                 }}
               >
-                {aksesItem.akses}
+                <ListItemIcon sx={{ minWidth: 28, color: isSelected ? "var(--primary)" : "var(--muted-foreground)" }}>{isSelected ? <CheckRoundedIcon fontSize="small" /> : <SwapHorizRoundedIcon fontSize="small" />}</ListItemIcon>
+                <Typography variant="body2" sx={{ color: "var(--foreground)" }}>
+                  {aksesItem.akses}
+                </Typography>
               </MenuItem>
             );
           })}

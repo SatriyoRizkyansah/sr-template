@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, Box } from "@mui/material";
 import { useTheme } from "../theme/useTheme";
 import { KeyboardArrowRightRounded as ArrowIcon } from "@mui/icons-material";
+import "./CommandPalette.css";
 
 interface CommandPaletteProps {
   isOpen?: boolean;

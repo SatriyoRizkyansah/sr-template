@@ -1,5 +1,5 @@
-import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, useMediaQuery, useTheme as useMuiTheme } from "@mui/material";
-import { Search as SearchIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon } from "@mui/icons-material";
+import { AppBar, Toolbar, Box, Typography, IconButton, InputBase, useMediaQuery, useTheme as useMuiTheme, Badge, Menu, MenuItem, Divider } from "@mui/material";
+import { Search as SearchIcon, DarkMode as DarkModeIcon, LightMode as LightModeIcon, NotificationsNone as NotificationsNoneIcon } from "@mui/icons-material";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import { useSidebar } from "./DashboardLayout";
 import { useTheme } from "../theme/useTheme";
@@ -10,8 +10,8 @@ const drawerWidth = 250;
 const drawerWidthCollapsed = 80;
 
 export function Navbar() {
-  // const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [notificationAnchor, setNotificationAnchor] = useState<null | HTMLElement>(null);
   const { isCollapsed, setIsCollapsed } = useSidebar();
   const { mode, toggleColorMode } = useTheme();
   const muiTheme = useMuiTheme();
@@ -19,13 +19,19 @@ export function Navbar() {
   const sidebarWidth = isCollapsed ? drawerWidthCollapsed : drawerWidth;
   const currentWidth = isMobile ? 0 : sidebarWidth;
 
-  // const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+  const dummyNotifications = [
+    { id: 1, title: "Reminder", content: "Laporan mingguan belum dikirim." },
+    { id: 2, title: "Approval", content: "1 pengajuan cuti menunggu persetujuan." },
+    { id: 3, title: "Info", content: "Maintenance sistem dijadwalkan Jumat 21:00." },
+  ];
 
-  // const handleMenuClose = () => {
-  //   setAnchorEl(null);
-  // };
+  const handleOpenNotifications = (event: React.MouseEvent<HTMLElement>) => {
+    setNotificationAnchor(event.currentTarget);
+  };
+
+  const handleCloseNotifications = () => {
+    setNotificationAnchor(null);
+  };
 
   return (
     <AppBar
@@ -48,13 +54,13 @@ export function Navbar() {
         sx={{
           minHeight: "56px !important",
           px: { xs: 2, sm: 3 },
-          display: "grid",
-          gridTemplateColumns: "1fr auto 1fr",
+          display: "flex",
+          justifyContent: "space-between",
           alignItems: "center",
           gap: { xs: 1, sm: 2 },
         }}
       >
-        <Box sx={{ justifySelf: "start" }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, flex: 1, minWidth: 0 }}>
           {isMobile ? (
             <IconButton
               onClick={() => setIsCollapsed(!isCollapsed)}
@@ -75,56 +81,76 @@ export function Navbar() {
               <MenuOutlinedIcon fontSize="small" />
             </IconButton>
           ) : null}
-        </Box>
-        <Box
-          onClick={() => setCommandPaletteOpen(true)}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            backgroundColor: "var(--card)",
-            borderRadius: "999px",
-            px: 2,
-            py: 0.15,
-            width: "100%",
-            maxWidth: 520,
-            border: `1px solid ${muiTheme.palette.divider}`,
-            transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-            cursor: "pointer",
-            gap: 1,
-            justifySelf: "center",
-            "&:hover": {
-              borderColor: muiTheme.palette.primary.main,
-              backgroundColor: muiTheme.palette.action.selected,
-            },
-          }}
-        >
-          <SearchIcon sx={{ color: muiTheme.palette.text.secondary, fontSize: "14px" }} />
-          <InputBase
-            placeholder="Search... (Cmd+K)"
+
+          <Box
+            onClick={() => setCommandPaletteOpen(true)}
             sx={{
-              flex: 1,
-              color: muiTheme.palette.text.primary,
-              fontSize: "0.8rem",
-              pointerEvents: "none",
-              "& input::placeholder": {
-                color: muiTheme.palette.text.secondary,
-                opacity: 1,
+              display: { xs: "none", sm: "flex" },
+              alignItems: "center",
+              backgroundColor: "var(--card)",
+              borderRadius: "999px",
+              px: 2,
+              py: 0.15,
+              width: "min(460px, 100%)",
+              border: `1px solid ${muiTheme.palette.divider}`,
+              transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+              cursor: "pointer",
+              gap: 1,
+              "&:hover": {
+                borderColor: muiTheme.palette.primary.main,
+                backgroundColor: muiTheme.palette.action.selected,
               },
             }}
-            readOnly
-          />
-          <Typography
-            sx={{
-              fontSize: "0.7rem",
-              color: muiTheme.palette.text.secondary,
-              fontWeight: 500,
-            }}
           >
-            ⌘K
-          </Typography>
+            <SearchIcon sx={{ color: muiTheme.palette.text.secondary, fontSize: "14px" }} />
+            <InputBase
+              placeholder="Search... (Cmd+K)"
+              sx={{
+                flex: 1,
+                color: muiTheme.palette.text.primary,
+                fontSize: "0.8rem",
+                pointerEvents: "none",
+                "& input::placeholder": {
+                  color: muiTheme.palette.text.secondary,
+                  opacity: 1,
+                },
+              }}
+              readOnly
+            />
+            <Typography
+              sx={{
+                fontSize: "0.7rem",
+                color: muiTheme.palette.text.secondary,
+                fontWeight: 500,
+              }}
+            >
+              ⌘K
+            </Typography>
+          </Box>
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, justifySelf: "end" }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.25 }}>
+          <IconButton
+            onClick={handleOpenNotifications}
+            sx={{
+              color: "var(--foreground)",
+              backgroundColor: "var(--muted)",
+              border: "1px solid var(--border)",
+              width: 32,
+              height: 32,
+              borderRadius: "var(--radius)",
+              transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
+              "&:hover": {
+                backgroundColor: "var(--accent)",
+                borderColor: "var(--primary)",
+              },
+            }}
+          >
+            <Badge color="error" variant="dot" overlap="circular" invisible={dummyNotifications.length === 0}>
+              <NotificationsNoneIcon fontSize="small" />
+            </Badge>
+          </IconButton>
+
           <IconButton
             onClick={toggleColorMode}
             sx={{
@@ -146,84 +172,43 @@ export function Navbar() {
           >
             {mode === "dark" ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
           </IconButton>
-
-          {/* <Avatar
-            onClick={handleMenuOpen}
-            sx={{
-              width: 40,
-              height: 40,
-              backgroundColor: muiTheme.palette.primary.main,
-              fontSize: "0.875rem",
-              fontWeight: 600,
-              color: "var(--primary-foreground)",
-              cursor: "pointer",
-              border: `2px solid ${muiTheme.palette.divider}`,
-              transition: "all 150ms cubic-bezier(0.4, 0, 0.2, 1)",
-              "&:hover": {
-                borderColor: muiTheme.palette.primary.main,
-                transform: "scale(1.05)",
-                boxShadow: muiTheme.shadows[6],
-              },
-            }}
-          >
-            HN
-          </Avatar>
-
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-            slotProps={{
-              paper: {
-                sx: {
-                  mt: 1.5,
-                  backgroundColor: "var(--card)",
-                  color: "var(--card-foreground)",
-                  boxShadow: "var(--shadow-lg)",
-                  border: "1px solid var(--border)",
-                  borderRadius: "var(--radius-lg)",
-                  minWidth: 220,
-                  overflow: "hidden",
-                },
-              },
-            }}
-          >
-            <MenuItem
-              disabled
-              sx={{
-                color: "var(--foreground)",
-                py: 1.5,
-                "&.Mui-disabled": {
-                  opacity: 1,
-                  backgroundColor: "var(--card)",
-                },
-              }}
-            >
-              <Avatar
-                sx={{
-                  width: 32,
-                  height: 32,
-                  mr: 1.5,
-                  backgroundColor: "var(--primary)",
-                  color: "var(--primary-foreground)",
-                  fontSize: "0.85rem",
-                  fontWeight: 600,
-                }}
-              >
-                HN
-              </Avatar>
-              <Box>
-                <Typography variant="body2" fontWeight={600}>
-                  Harper Nelson
-                </Typography>
-                <Typography variant="caption" sx={{ color: "var(--muted-foreground)" }}>
-                  harper@example.com
-                </Typography>
-              </Box>
-            </MenuItem>
-          </Menu> */}
         </Box>
       </Toolbar>
+
+      <Menu
+        anchorEl={notificationAnchor}
+        open={Boolean(notificationAnchor)}
+        onClose={handleCloseNotifications}
+        PaperProps={{
+          sx: {
+            mt: 1,
+            minWidth: 320,
+            borderRadius: "10px",
+            border: "1px solid var(--border)",
+            backgroundColor: "var(--card)",
+          },
+        }}
+      >
+        <MenuItem disabled sx={{ opacity: 1 }}>
+          <Typography variant="body2" fontWeight={700} sx={{ color: "var(--foreground)" }}>
+            Notifications
+          </Typography>
+        </MenuItem>
+        <Divider />
+        {dummyNotifications.map((notification) => (
+          <MenuItem key={notification.id} onClick={handleCloseNotifications} sx={{ alignItems: "flex-start", py: 1.1 }}>
+            <Box>
+              <Typography variant="body2" fontWeight={600} sx={{ color: "var(--foreground)" }}>
+                {notification.title}
+              </Typography>
+              <Typography variant="caption" sx={{ color: "var(--muted-foreground)", whiteSpace: "normal" }}>
+                {notification.content}
+              </Typography>
+            </Box>
+          </MenuItem>
+        ))}
+      </Menu>
+
       <CommandPalette isOpen={commandPaletteOpen} onOpenChange={setCommandPaletteOpen} />
     </AppBar>
   );

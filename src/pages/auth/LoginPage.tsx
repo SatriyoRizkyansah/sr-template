@@ -41,7 +41,7 @@ export function LoginPage() {
         if (akses && akses.length >= 1) {
           const authToken = akses[0];
           try {
-            set_selected_token(authToken);
+            set_selected_token(authToken.token);
             setTimeout(() => {
               navigate("/dashboard", { replace: true });
             }, 100);

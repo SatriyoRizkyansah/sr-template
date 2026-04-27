@@ -1,6 +1,8 @@
-import { Box, Card } from "@mui/material";
+import { Box, Card, IconButton } from "@mui/material";
+import { LightMode as LightModeIcon, DarkMode as DarkModeIcon } from "@mui/icons-material";
 import type { ReactNode } from "react";
 import { Loader } from "../../../components";
+import { useTheme } from "../../../theme";
 
 interface LoginCardLayoutProps {
   isLoading: boolean;
@@ -9,6 +11,8 @@ interface LoginCardLayoutProps {
 }
 
 export function LoginCardLayout({ isLoading, formSection, visualSection }: LoginCardLayoutProps) {
+  const { mode, toggleColorMode } = useTheme();
+
   return (
     <Box
       sx={{
@@ -35,6 +39,28 @@ export function LoginCardLayout({ isLoading, formSection, visualSection }: Login
           gridTemplateColumns: { xs: "1fr", md: "minmax(0, 44%) minmax(0, 56%)" },
         }}
       >
+        <IconButton
+          onClick={toggleColorMode}
+          aria-label="toggle theme"
+          sx={{
+            position: "absolute",
+            top: { xs: 14, md: 16 },
+            right: { xs: 14, md: 16 },
+            zIndex: 21,
+            border: "1px solid var(--border)",
+            borderRadius: "10px",
+            color: "var(--foreground)",
+            backgroundColor: "color-mix(in srgb, var(--card) 86%, transparent)",
+            backdropFilter: "blur(4px)",
+            "&:hover": {
+              borderColor: "var(--primary)",
+              backgroundColor: "var(--accent)",
+            },
+          }}
+        >
+          {mode === "dark" ? <LightModeIcon fontSize="small" /> : <DarkModeIcon fontSize="small" />}
+        </IconButton>
+
         {isLoading && (
           <Box
             sx={{
